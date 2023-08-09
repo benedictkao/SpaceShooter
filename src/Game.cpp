@@ -15,7 +15,7 @@ int Game::run() {
 	if (initResult != SDL2::INIT_SUCCESS)
 		return GAME_INIT_ERROR::SUBSYSTEM;
 
-	_window = SDL2::createWindow("Jump!");
+	_window = SDL2::createWindow("Shoot 'Em Up");
 	if (!_window)
 		return GAME_INIT_ERROR::WINDOW;
 
@@ -23,15 +23,21 @@ int Game::run() {
 	if (!_renderer)
 		return GAME_INIT_ERROR::RENDERER;
 
+	SDL2::Texture tex = SDL2::loadTexture("../../../res/dirt.png", _renderer);
+
 	_running = true;
 	while (_running) {
 		// main game loop
 
 		Uint64 frameStart = SDL2::elapsedTimeInMillis();
 
+		SDL2::prepareScene(_renderer);
+
 		handleEvents();
+
+		SDL2::blit(tex, _renderer, 100, 100);
 		
-		// calculations
+		SDL2::presentScene(_renderer);
 
 		// ui render
 

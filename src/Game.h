@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDL.h"
+#include "SDLWrapper.h"
 
 class Game {
 private:
