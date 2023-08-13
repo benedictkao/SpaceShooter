@@ -1,16 +1,16 @@
 #pragma once
 
-#include "EntityManager.h"
+#include "PlayerController.h"
 #include "SDLWrapper.h"
 
 class KeyboardManager {
 private:
-	EntityManager& _em;
+  PlayerController &_controller;
 
 public:
-	KeyboardManager(EntityManager&);
+  KeyboardManager(PlayerController &);
 
-	void handleKeydownEvent(const SDL2::Event&);
+  void handleKeydownEvent(const SDL2::Event &);
 
-	void handleKeyupEvent(const SDL2::Event&);
+  void handleKeyupEvent(const SDL2::Event &);
 };

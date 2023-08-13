@@ -1,37 +1,27 @@
 #pragma once
 
-#include <array>
 #include "SDLWrapper.h"
 #include "component/Components.h"
+#include <array>
 
-constexpr int MAX_ENTITIES{ 5 };
+constexpr int MAX_ENTITIES{5};
 
-class EntityManager {
+enum ComponentFlag { SPRITE = 1 << 0, TRANSFORM = 1 << 1 };
+
+class EntitySettings {
 private:
-	int _num_entities;
-	SDL2::Renderer _renderer;
-	std::array<SpriteComponent, MAX_ENTITIES> _sprites;
-	std::array<TransformComponent, MAX_ENTITIES> _transforms;
+  int _componentBitSet;
 
 public:
-	EntityManager(SDL2::Renderer);
+  bool hasComponents(int flags) const noexcept;
+  void setComponents(int flags);
+};
 
-	int addPlayer(int, int);
+struct EntityManager {
+  int num_entities = 0;
+  std::array<EntitySettings, MAX_ENTITIES> settings;
+  std::array<SpriteComponent, MAX_ENTITIES> sprites;
+  std::array<TransformComponent, MAX_ENTITIES> transforms;
 
-	void movePlayerUp();
-	void movePlayerDown();
-	void movePlayerLeft();
-	void movePlayerRight();
-
-	void stopMovingPlayerUp();
-	void stopMovingPlayerDown();
-	void stopMovingPlayerLeft();
-	void stopMovingPlayerRight();
-
-	void updateAllPositions();
-	void updateAllTextures();
-
-private:
-	void updatePosition(TransformComponent&);
-	void updateTexture(const SpriteComponent&);
+  int addEntity();
 };
