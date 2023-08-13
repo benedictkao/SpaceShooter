@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SDLWrapper.h"
+#include "KeyboardManager.h"
 
 class Game {
 private:
@@ -13,7 +14,7 @@ public:
 
 	int run();
 
-	void handleEvents();
+	void handleEvents(KeyboardManager);
 
 	Uint64 calculateSleepTime(Uint64);
 };

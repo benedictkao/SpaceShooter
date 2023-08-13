@@ -20,9 +20,9 @@ namespace SDL2 {
 
 	Texture loadTexture(const char*, Renderer);
 
-	void blit(Texture, Renderer, int x, int y);
+	void blit(Texture, Renderer, int, int, int, int);
 
-	void prepareScene(Renderer);
+	void prepareScene(Renderer, Uint8, Uint8, Uint8, Uint8);
 
 	void presentScene(Renderer);
 

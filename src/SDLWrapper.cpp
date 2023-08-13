@@ -23,8 +23,6 @@ Uint32 SDL2::pollEvent(SDL2::Event* event) {
 SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
 	Texture texture;
 
-	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, SDL_GetBasePath());
-
 	SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO, "Loading %s", path);
 
 	texture = IMG_LoadTexture(renderer, path);
@@ -35,16 +33,17 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
 	return texture;
 }
 
-void SDL2::blit(Texture tex, Renderer renderer, int x, int y) {
+void SDL2::blit(Texture tex, Renderer renderer, int x, int y, int w, int h) {
 	SDL_Rect dest;
 	dest.x = x;
 	dest.y = y;
-	SDL_QueryTexture(tex, NULL, NULL, &dest.w, &dest.h);	// copies texture width and height to destination
+	dest.w = w;
+	dest.h = h;
 	SDL_RenderCopy(renderer, tex, NULL, &dest);
 }
 
-void SDL2::prepareScene(SDL2::Renderer renderer) {
-	SDL_SetRenderDrawColor(renderer, 96, 128, 255, 255);
+void SDL2::prepareScene(SDL2::Renderer renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
+	SDL_SetRenderDrawColor(renderer, r, g, b, a);
 	SDL_RenderClear(renderer);
 }
 

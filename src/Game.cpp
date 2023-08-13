@@ -1,12 +1,10 @@
 #include "Game.h"
+#include "Math.h"
+#include "EntityManager.h"
 
 static constexpr auto TARGET_FPS{ 30 };
 static constexpr auto MILLIS_PER_FRAME{ 1000 / TARGET_FPS };
 enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
-
-static inline Uint64 max(Uint64 a, Uint64 b) noexcept {
-	return a > b ? a : b;
-}
 
 Game::Game() : _window(nullptr), _renderer(nullptr), _running(false) {}
 
@@ -23,7 +21,10 @@ int Game::run() {
 	if (!_renderer)
 		return GAME_INIT_ERROR::RENDERER;
 
-	SDL2::Texture tex = SDL2::loadTexture("../../../res/dirt.png", _renderer);
+	EntityManager entityManager(_renderer);
+	entityManager.addPlayer(100, 100);
+
+	KeyboardManager keyboardManager(entityManager);
 
 	_running = true;
 	while (_running) {
@@ -31,11 +32,12 @@ int Game::run() {
 
 		Uint64 frameStart = SDL2::elapsedTimeInMillis();
 
-		SDL2::prepareScene(_renderer);
+		SDL2::prepareScene(_renderer, 28, 28, 28, 255);
 
-		handleEvents();
+		handleEvents(keyboardManager);
 
-		SDL2::blit(tex, _renderer, 100, 100);
+		entityManager.updateAllPositions();
+		entityManager.updateAllTextures();
 		
 		SDL2::presentScene(_renderer);
 
@@ -49,12 +51,19 @@ int Game::run() {
 	return 0;
 }
 
-void Game::handleEvents() {
+void Game::handleEvents(KeyboardManager km) {
 	SDL2::Event event;
+	bool isPressArrow = false;
 	while (SDL2::pollEvent(&event)) {
 		switch (event.type) {	// add other events below here
 		case SDL_QUIT:
 			_running = false;
+			break;
+		case SDL_KEYDOWN:
+			km.handleKeydownEvent(event);
+			break;
+		case SDL_KEYUP:
+			km.handleKeyupEvent(event);
 			break;
 		default:
 			break;
@@ -64,6 +73,6 @@ void Game::handleEvents() {
 
 Uint64 Game::calculateSleepTime(Uint64 frameStart) {
 	Uint64 actualFrameTime = frameStart - SDL2::elapsedTimeInMillis();
-	Uint64 sleepTime = max(MILLIS_PER_FRAME - actualFrameTime, 0);
+	Uint64 sleepTime = maxUnsigned(MILLIS_PER_FRAME - actualFrameTime, 0);
 	return sleepTime;
 }
