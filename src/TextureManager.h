@@ -13,5 +13,5 @@ public:
   void updateTextures();
 
 private:
-  void updateTexture(const SpriteComponent &);
+  void updateTexture(int entity);
 };

@@ -3,32 +3,32 @@
 #include <SDL.h>
 
 namespace SDL2 {
-	typedef SDL_Window* Window;
-	typedef SDL_Renderer* Renderer;
-	typedef SDL_Texture* Texture;
-	typedef SDL_Event Event;
+typedef SDL_Window *Window;
+typedef SDL_Renderer *Renderer;
+typedef SDL_Texture *Texture;
+typedef SDL_Event Event;
 
-	constexpr auto INIT_SUCCESS{ 0 };
+constexpr auto INIT_SUCCESS{0};
 
-	Uint32 init();
+Uint32 init();
 
-	Window createWindow(const char*);
+Window createWindow(const char *);
 
-	Renderer createRenderer(Window);
+Renderer createRenderer(Window);
 
-	Uint32 pollEvent(Event*);
+Uint32 pollEvent(Event *);
 
-	Texture loadTexture(const char*, Renderer);
+Texture loadTexture(const char *, Renderer);
 
-	void blit(Texture, Renderer, int, int, int, int);
+void blit(Texture, Renderer, int, int, int, int);
 
-	void prepareScene(Renderer, Uint8, Uint8, Uint8, Uint8);
+void prepareScene(Renderer, Uint8, Uint8, Uint8, Uint8);
 
-	void presentScene(Renderer);
+void presentScene(Renderer);
 
-	Uint64 elapsedTimeInMillis();
+Uint64 elapsedTimeInMillis();
 
-	void delay(Uint32);
+void delay(Uint32);
 
-	void close(Window);
-}
+void close(Window);
+} // namespace SDL2

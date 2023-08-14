@@ -1,14 +1,12 @@
 #pragma once
-
-struct Vector2D {
-	int x;
-	int y;
-};
+#include "Vector2D.h"
 
 struct TransformComponent {
-	int entity;
-	Vector2D position;
-	Vector2D speed;
-	int width;
-	int height;
+  Vector2D position;
+  Vector2D speed;
+  int width;
+  int height;
+
+  int centerX() const;
+  int centerY() const;
 };

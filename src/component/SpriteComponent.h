@@ -3,6 +3,5 @@
 #include "../SDLWrapper.h"
 
 struct SpriteComponent {
-	int entity;
-	SDL2::Texture texture;
+  SDL2::Texture texture;
 };

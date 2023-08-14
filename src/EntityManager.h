@@ -4,9 +4,9 @@
 #include "component/Components.h"
 #include <array>
 
-constexpr int MAX_ENTITIES{5};
+constexpr int MAX_ENTITIES{50};
 
-enum ComponentFlag { SPRITE = 1 << 0, TRANSFORM = 1 << 1 };
+enum ComponentFlag { GUN = 1 << 0 };
 
 class EntitySettings {
 private:
@@ -22,6 +22,8 @@ struct EntityManager {
   std::array<EntitySettings, MAX_ENTITIES> settings;
   std::array<SpriteComponent, MAX_ENTITIES> sprites;
   std::array<TransformComponent, MAX_ENTITIES> transforms;
+  std::array<GunComponent, MAX_ENTITIES> guns;
 
   int addEntity();
+  void removeEntity(int id);
 };

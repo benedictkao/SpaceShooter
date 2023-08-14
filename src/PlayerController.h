@@ -23,4 +23,12 @@ public:
   void stopMovingPlayerDown();
   void stopMovingPlayerLeft();
   void stopMovingPlayerRight();
+
+  void shootGun();
+  void stopShootingGun();
+
+private:
+  void initPlayerSprite();
+  void initPlayerTransform(int x, int y);
+  void initPlayerGun();
 };

@@ -17,6 +17,9 @@ void KeyboardManager::handleKeydownEvent(const SDL2::Event &event) {
   case SDLK_RIGHT:
     _controller.movePlayerRight();
     break;
+  case SDLK_SPACE:
+    _controller.shootGun();
+    break;
   default:
     break;
   }
@@ -35,6 +38,9 @@ void KeyboardManager::handleKeyupEvent(const SDL2::Event &event) {
     break;
   case SDLK_RIGHT:
     _controller.stopMovingPlayerRight();
+    break;
+  case SDLK_SPACE:
+    _controller.stopShootingGun();
     break;
   default:
     break;
