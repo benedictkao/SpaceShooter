@@ -1,19 +1,20 @@
 #pragma once
 
-#include "SDL.h"
+#include "KeyboardManager.h"
+#include "SDLWrapper.h"
 
 class Game {
 private:
-	SDL2::Window _window;
-	SDL2::Renderer _renderer;
-	bool _running;
+  SDL2::Window   _window;
+  SDL2::Renderer _renderer;
+  bool           _running;
 
 public:
-	Game();
+  Game();
 
-	int run();
+  int run();
 
-	void handleEvents();
+  void handleEvents(KeyboardManager);
 
-	Uint64 calculateSleepTime(Uint64);
+  Uint64 calculateSleepTime(Uint64);
 };
