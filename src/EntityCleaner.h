@@ -3,12 +3,14 @@
 
 class EntityCleaner {
 private:
-  EntityManager &_em;
+  EntityManager& _em;
 
 public:
-  EntityCleaner(EntityManager &);
+  EntityCleaner(EntityManager&);
   void removeDeadEntities();
 
 private:
-  static bool isOutOfBounds(const Vector2D &position);
+  bool shouldRemove(int entity);
+  bool isOutOfBounds(int entity);
+  bool isNoHP(int entity);
 };

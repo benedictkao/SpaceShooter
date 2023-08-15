@@ -2,18 +2,18 @@
 #include "Vector2D.h"
 
 struct Ammo {
-  const char *asset;
-  int coolDown;
-  int speed;
-  int width;
-  int height;
+  const char* asset;
+  int         coolDown;
+  int         speed;
+  int         width;
+  int         height;
 
   static const Ammo Normal;
 };
 
 struct GunComponent {
-  Ammo ammo;
+  Ammo     ammo;
   Vector2D direction;
-  int coolDown;
-  bool isFiring;
+  int      coolDown;
+  bool     isFiring;
 };

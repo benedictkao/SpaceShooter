@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "ColliderSystem.h"
 #include "EntityCleaner.h"
 #include "EntityManager.h"
 #include "GunManager.h"
@@ -7,9 +8,9 @@
 #include "TextureManager.h"
 #include "utils/Math.h"
 
-static constexpr auto WINDOW_TITLE{"Shoot 'Em Up"};
-static constexpr auto TARGET_FPS{40};
-static constexpr auto MILLIS_PER_FRAME{1000 / TARGET_FPS};
+static constexpr auto WINDOW_TITLE{ "Shoot 'Em Up" };
+static constexpr auto TARGET_FPS{ 40 };
+static constexpr auto MILLIS_PER_FRAME{ 1000 / TARGET_FPS };
 enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
 
 int x = 0;
@@ -29,15 +30,32 @@ int Game::run() {
   if (!_renderer)
     return GAME_INIT_ERROR::RENDERER;
 
-  EntityManager entityManager;
-  EntityCleaner cleaner(entityManager);
-  PositionManager positionManager(entityManager);
+  EntityManager    entityManager;
+  EntityCleaner    cleaner(entityManager);
+  PositionManager  positionManager(entityManager);
   PlayerController playerController(entityManager, _renderer);
-  TextureManager textureManager(entityManager, _renderer);
-  GunManager gunManager(entityManager, _renderer);
-  KeyboardManager keyboardManager(playerController);
+  TextureManager   textureManager(entityManager, _renderer);
+  GunManager       gunManager(entityManager, _renderer);
+  ColliderSystem   colliderSystem(entityManager);
+  KeyboardManager  keyboardManager(playerController);
 
   playerController.addPlayer(400, 450);
+
+  // TODO: put in separate class
+  int             id       = entityManager.addEntity();
+  EntitySettings& settings = entityManager.settings[id];
+  settings.addComponents(ComponentFlag::COLLIDER);
+  TransformComponent& t = entityManager.transforms[id];
+  t.position            = { 300, 100 };
+  t.speed               = { 0, 0 };
+  t.height              = 50;
+  t.width               = 50;
+  SpriteComponent& s    = entityManager.sprites[id];
+  s.texture = SDL2::loadTexture("../../../res/red-dot.png", _renderer);
+  ColliderComponent& c = entityManager.colliders[id];
+  c.health             = 10;
+  c.mass               = 5;
+  c.isEnemy            = true;
 
   _running = true;
   while (_running) {
@@ -50,6 +68,8 @@ int Game::run() {
     handleEvents(keyboardManager);
 
     positionManager.updatePositions();
+
+    colliderSystem.calculateCollisions();
 
     gunManager.shootProjectiles();
 
@@ -70,26 +90,27 @@ int Game::run() {
 
 void Game::handleEvents(KeyboardManager km) {
   SDL2::Event event;
-  bool isPressArrow = false;
+  bool        isPressArrow = false;
   while (SDL2::pollEvent(&event)) {
     switch (event.type) { // add other events below here
-    case SDL_QUIT:
-      _running = false;
-      break;
-    case SDL_KEYDOWN:
-      km.handleKeydownEvent(event);
-      break;
-    case SDL_KEYUP:
-      km.handleKeyupEvent(event);
-      break;
-    default:
-      break;
+      case SDL_QUIT:
+        _running = false;
+        break;
+      case SDL_KEYDOWN:
+        km.handleKeydownEvent(event);
+        break;
+      case SDL_KEYUP:
+        km.handleKeyupEvent(event);
+        break;
+      default:
+        break;
     }
   }
 }
 
 Uint64 Game::calculateSleepTime(Uint64 frameStart) {
   Uint64 actualFrameTime = frameStart - SDL2::elapsedTimeInMillis();
-  Uint64 sleepTime = max(MILLIS_PER_FRAME - actualFrameTime, 0);
+  Uint64 sleepTime       = MILLIS_PER_FRAME - actualFrameTime;
+  coercePositive(sleepTime);
   return sleepTime;
 }

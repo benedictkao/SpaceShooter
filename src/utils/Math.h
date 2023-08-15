@@ -1,15 +1,31 @@
 #pragma once
 
-typedef unsigned long long _uint64;
-
-static inline _uint64 maxUnsigned(_uint64 a, _uint64 b) noexcept {
+template <typename T>
+constexpr const T& max(const T& a, const T& b) {
   return a > b ? a : b;
 }
 
-static inline _uint64 minUnsigned(_uint64 a, _uint64 b) noexcept {
+template <typename T>
+constexpr const T& min(const T& a, const T& b) {
   return a < b ? a : b;
 }
 
-static inline int max(int a, int b) noexcept { return a > b ? a : b; }
+template <typename T>
+constexpr void coerceAtLeast(T& value, const T& min) {
+  value = value > min ? value : min;
+}
 
-static inline int min(int a, int b) noexcept { return a < b ? a : b; }
+template <typename T>
+constexpr void coerceAtMost(T& value, const T& max) {
+  value = value < max ? value : max;
+}
+
+template <typename T>
+constexpr void coercePositive(T& value) noexcept {
+  coerceAtLeast(value, static_cast<T>(0));
+}
+
+template <typename T>
+constexpr void coerceNegative(T& value) noexcept {
+  coerceAtMost(value, static_cast<T>(0));
+}

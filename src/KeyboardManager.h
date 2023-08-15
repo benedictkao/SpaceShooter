@@ -5,12 +5,12 @@
 
 class KeyboardManager {
 private:
-  PlayerController &_controller;
+  PlayerController& _controller;
 
 public:
-  KeyboardManager(PlayerController &);
+  KeyboardManager(PlayerController&);
 
-  void handleKeydownEvent(const SDL2::Event &);
+  void handleKeydownEvent(const SDL2::Event&);
 
-  void handleKeyupEvent(const SDL2::Event &);
+  void handleKeyupEvent(const SDL2::Event&);
 };

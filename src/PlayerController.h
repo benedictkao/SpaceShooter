@@ -5,12 +5,12 @@
 
 class PlayerController {
 private:
-  EntityManager &_em;
+  EntityManager& _em;
   SDL2::Renderer _renderer;
-  int _playerId;
+  int            _playerId;
 
 public:
-  PlayerController(EntityManager &, SDL2::Renderer);
+  PlayerController(EntityManager&, SDL2::Renderer);
 
   void addPlayer(int x, int y);
 

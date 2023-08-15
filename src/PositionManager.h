@@ -4,12 +4,12 @@
 
 class PositionManager {
 private:
-  EntityManager &_em;
+  EntityManager& _em;
 
 public:
-  PositionManager(EntityManager &);
+  PositionManager(EntityManager&);
   void updatePositions();
 
 private:
-  void updatePosition(TransformComponent &);
+  void updatePosition(TransformComponent&);
 };

@@ -3,32 +3,35 @@
 #include <SDL.h>
 
 namespace SDL2 {
-typedef SDL_Window *Window;
-typedef SDL_Renderer *Renderer;
-typedef SDL_Texture *Texture;
-typedef SDL_Event Event;
+  typedef SDL_Window*   Window;
+  typedef SDL_Renderer* Renderer;
+  typedef SDL_Texture*  Texture;
+  typedef SDL_Event     Event;
+  typedef SDL_Rect      Rect;
 
-constexpr auto INIT_SUCCESS{0};
+  constexpr auto INIT_SUCCESS{ 0 };
 
-Uint32 init();
+  Uint32 init();
 
-Window createWindow(const char *);
+  Window createWindow(const char*);
 
-Renderer createRenderer(Window);
+  Renderer createRenderer(Window);
 
-Uint32 pollEvent(Event *);
+  Uint32 pollEvent(Event*);
 
-Texture loadTexture(const char *, Renderer);
+  Texture loadTexture(const char*, Renderer);
 
-void blit(Texture, Renderer, int, int, int, int);
+  void blit(Texture, Renderer, int x, int y, int w, int h);
 
-void prepareScene(Renderer, Uint8, Uint8, Uint8, Uint8);
+  bool hasIntersect(const Rect&, const Rect&);
 
-void presentScene(Renderer);
+  void prepareScene(Renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
-Uint64 elapsedTimeInMillis();
+  void presentScene(Renderer);
 
-void delay(Uint32);
+  Uint64 elapsedTimeInMillis();
 
-void close(Window);
+  void delay(Uint32);
+
+  void close(Window);
 } // namespace SDL2
