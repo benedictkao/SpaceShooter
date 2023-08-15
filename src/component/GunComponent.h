@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector2D.h"
+#include "ComponentFlag.h"
 
 struct Ammo {
   const char* asset;
@@ -16,4 +17,6 @@ struct GunComponent {
   Vector2D direction;
   int      coolDown;
   bool     isFiring;
+
+  static constexpr ComponentFlag FLAG{ ComponentFlag::GUN };
 };

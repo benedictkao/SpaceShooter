@@ -5,13 +5,14 @@ TextureManager::TextureManager(EntityManager& em, SDL2::Renderer renderer)
     : _em(em), _renderer(renderer) {}
 
 void TextureManager::updateTextures() {
-  for (int i = 0; i < _em.num_entities; i++)
+  const auto& activeEntities = _em.getActive();
+  for (int i : activeEntities)
     updateTexture(i);
 }
 
 void TextureManager::updateTexture(int entity) {
-  SDL2::Texture       tex       = _em.sprites[entity].texture;
-  TransformComponent& transform = _em.transforms[entity];
+  SDL2::Texture       tex = _em.getComponent<SpriteComponent>(entity).texture;
+  TransformComponent& transform = _em.getComponent<TransformComponent>(entity);
   SDL2::blit(tex,
              _renderer,
              transform.position.x,

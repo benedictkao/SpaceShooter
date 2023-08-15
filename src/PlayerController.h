@@ -1,7 +1,6 @@
 #pragma once
 
 #include "EntityManager.h"
-#include "SDLWrapper.h"
 
 class PlayerController {
 private:
@@ -28,7 +27,8 @@ public:
   void stopShootingGun();
 
 private:
-  void initPlayerSprite();
-  void initPlayerTransform(int x, int y);
-  void initPlayerGun();
+  SpriteComponent createSprite() const;
+  static TransformComponent createTransform(int x, int y);
+  static GunComponent createGun();
+  static ColliderComponent  createCollider();
 };

@@ -23,6 +23,8 @@ namespace SDL2 {
 
   void blit(Texture, Renderer, int x, int y, int w, int h);
 
+  void destroyTexture(Texture);
+
   bool hasIntersect(const Rect&, const Rect&);
 
   void prepareScene(Renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);

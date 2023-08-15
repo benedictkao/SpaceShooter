@@ -1,11 +1,14 @@
 #pragma once
+#include "ComponentFlag.h"
 
 namespace Mass {
-constexpr int INFINITE{-1};
+  constexpr int INFINITE{ -1 };
 }
 
 struct ColliderComponent {
-  int health;
-  int mass;
+  int  health;
+  int  mass;
   bool isEnemy;
+
+  static constexpr ComponentFlag FLAG{ ComponentFlag::COLLIDER };
 };

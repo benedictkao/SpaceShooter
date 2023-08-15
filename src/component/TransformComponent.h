@@ -1,5 +1,7 @@
 #pragma once
+
 #include "Vector2D.h"
+#include "ComponentFlag.h"
 
 struct TransformComponent {
   Vector2D position;
@@ -9,4 +11,6 @@ struct TransformComponent {
 
   int centerX() const;
   int centerY() const;
+
+  static constexpr ComponentFlag FLAG{ ComponentFlag::TRANSFORM };
 };

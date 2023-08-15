@@ -3,8 +3,9 @@
 PositionManager::PositionManager(EntityManager& em) : _em(em) {}
 
 void PositionManager::updatePositions() {
-  for (int i = 0; i < _em.num_entities; i++)
-    updatePosition(_em.transforms[i]);
+  const auto& activeEntities = _em.getActive();
+  for (int i : activeEntities)
+    updatePosition(_em.getComponent<TransformComponent>(i));
 }
 
 void PositionManager::updatePosition(TransformComponent& transform) {

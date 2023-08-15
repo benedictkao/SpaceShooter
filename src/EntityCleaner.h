@@ -8,9 +8,4 @@ private:
 public:
   EntityCleaner(EntityManager&);
   void removeDeadEntities();
-
-private:
-  bool shouldRemove(int entity);
-  bool isOutOfBounds(int entity);
-  bool isNoHP(int entity);
 };

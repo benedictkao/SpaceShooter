@@ -52,6 +52,10 @@ void SDL2::blit(Texture tex, Renderer renderer, int x, int y, int w, int h) {
   SDL_RenderCopy(renderer, tex, NULL, &dest);
 }
 
+void SDL2::destroyTexture(Texture tex) {
+  SDL_DestroyTexture(tex);
+}
+
 bool SDL2::hasIntersect(const Rect& a, const Rect& b) {
   return static_cast<bool>(SDL_HasIntersection(&a, &b));
 }
