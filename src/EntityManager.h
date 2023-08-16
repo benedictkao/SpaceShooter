@@ -1,7 +1,7 @@
 #pragma once
 
 #include "SDLWrapper.h"
-#include "component/Components.h"
+#include "Components.h"
 #include <array>
 #include <stack>
 #include <tuple>

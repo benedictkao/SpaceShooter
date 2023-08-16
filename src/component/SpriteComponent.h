@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../SDLWrapper.h"
+#include "SDLWrapper.h"
 #include "ComponentFlag.h"
 
 struct SpriteComponent {

@@ -1,10 +1,10 @@
-#include "GunManager.h"
+#include "GunSystem.h"
 #include "utils/Math.h"
 
-GunManager::GunManager(EntityManager& em, TextureManager& tm)
-    : _em(em), _tm(tm) {}
+GunSystem::GunSystem(EntityManager& em, TextureRepo& textureRepo)
+    : _em(em), _textureRepo(textureRepo) {}
 
-void GunManager::shootProjectiles() {
+void GunSystem::spawnProjectiles() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities) {
     if (_em.getComponent<EntitySettings>(i).hasComponents(ComponentFlag::GUN)) {
@@ -24,11 +24,11 @@ void GunManager::shootProjectiles() {
   }
 }
 
-void GunManager::createProjectile(const GunComponent&       gun,
-                                  const TransformComponent& parent) {
+void GunSystem::createProjectile(const GunComponent&       gun,
+                                 const TransformComponent& parent) {
 
   SpriteComponent sprite;
-  sprite.texture = _tm.loadTexture(gun.ammo.asset);
+  sprite.texture = _textureRepo.loadTexture(gun.ammo.asset);
 
   TransformComponent transform;
   transform.height     = gun.ammo.height;

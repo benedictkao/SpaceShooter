@@ -1,24 +1,19 @@
 #pragma once
 
-#include "EntityManager.h"
+#include "Components.h"
 #include "SDLWrapper.h"
 #include <unordered_map>
 
-class TextureManager {
+class TextureRepo {
 public:
   typedef std::unordered_map<TextureKey, SDL2::Texture> TextureMap;
 
 private:
-  EntityManager& _em;
   SDL2::Renderer _renderer;
-  TextureMap     _textureMap;
+  TextureMap _textureMap;
 
 public:
-  TextureManager(EntityManager&, SDL2::Renderer);
-  void          updateTextures();
+  void          setRenderer(SDL2::Renderer);
   SDL2::Texture loadTexture(TextureParams);
   SDL2::Texture loadWithoutCache(const char* path);
-
-private:
-  void updateTexture(int entity);
 };

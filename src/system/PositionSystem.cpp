@@ -1,18 +1,18 @@
-#include "PositionManager.h"
+#include "PositionSystem.h"
 
 static constexpr auto LOWER_LIMIT_X{ 0 };
 static constexpr auto UPPER_LIMIT_X{ 800 };
 static constexpr auto LOWER_LIMIT_Y{ 0 };
 static constexpr auto UPPER_LIMIT_Y{ 640 };
 
-PositionManager::PositionManager(EntityManager& em) : _em(em) {}
+PositionSystem::PositionSystem(EntityManager& em) : _em(em) {}
 
 static bool isOutOfBounds(Vector2D& position) {
   return position.x < LOWER_LIMIT_X || position.x > UPPER_LIMIT_X ||
          position.y < LOWER_LIMIT_Y || position.y > UPPER_LIMIT_Y;
 }
 
-void PositionManager::updatePositions() {
+void PositionSystem::updatePositions() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities) {
     TransformComponent& transform = _em.getComponent<TransformComponent>(i);
@@ -22,7 +22,7 @@ void PositionManager::updatePositions() {
   }
 }
 
-void PositionManager::updatePosition(TransformComponent& transform) {
+void PositionSystem::updatePosition(TransformComponent& transform) {
   transform.position.x += transform.speed.x;
   transform.position.y += transform.speed.y;
 }
