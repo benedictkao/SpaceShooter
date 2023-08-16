@@ -24,7 +24,6 @@ add_executable(main
     "src/TextureManager.cpp"
     "src/PositionManager.cpp"
     "src/GunManager.cpp"
-    "src/EntityCleaner.cpp"
     "src/ColliderSystem.cpp"
 )
 target_link_libraries(main

@@ -23,37 +23,28 @@ EntityManager::EntityInitializer EntityManager::addEntity() {
   int entity = _freeStore.top();
   _activeEntities.insert(entity);
   _freeStore.pop();
+  getComponent<EntitySettings>(entity).clear();
   EntityInitializer initializer(*this, entity);
   return initializer;
 }
 
+void EntityManager::scheduleRemoval(int entity) {
+  _deadEntities.insert(entity);
+}
+
 void EntityManager::removeEntity(int id) {
-  getComponent<EntitySettings>(id).clear();
-  SDL2::Texture tex = getComponent<SpriteComponent>(id).texture;
-  SDL2::destroyTexture(tex);
   _activeEntities.erase(id);
   _freeStore.push(id);
   std::cout << "Entity " << id << " destroyed" << std::endl;
 }
 
-void EntityManager::removeByCondition(remove_checker shouldRemove) {
-  auto it = _activeEntities.begin();
-  while (it != _activeEntities.end()) {
-    if (shouldRemove(*it, *this)) {
-      // TODO: put in separate fun
-      _freeStore.push(*it);
-      getComponent<EntitySettings>(*it).clear();
-      SDL2::Texture tex = getComponent<SpriteComponent>(*it).texture;
-      SDL2::destroyTexture(tex);
-      std::cout << "Entity " << *it << " destroyed" << std::endl;
-      it = _activeEntities.erase(it);
-    } else {
-      ++it;
-    }
-  }
+void EntityManager::removeDeadEntities() {
+  for (int entity : _deadEntities)
+    removeEntity(entity);
+  _deadEntities.clear();
 }
 
-const EntityManager::entity_set& EntityManager::getActive() {
+const EntityManager::EntitySet& EntityManager::getActive() {
   return _activeEntities;
 }
 

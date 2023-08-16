@@ -1,8 +1,8 @@
 #include "GunManager.h"
 #include "utils/Math.h"
 
-GunManager::GunManager(EntityManager& em, SDL2::Renderer renderer)
-    : _em(em), _renderer(renderer) {}
+GunManager::GunManager(EntityManager& em, TextureManager& tm)
+    : _em(em), _tm(tm) {}
 
 void GunManager::shootProjectiles() {
   const auto& activeEntities = _em.getActive();
@@ -28,7 +28,7 @@ void GunManager::createProjectile(const GunComponent&       gun,
                                   const TransformComponent& parent) {
 
   SpriteComponent sprite;
-  sprite.texture = SDL2::loadTexture(gun.ammo.asset, _renderer);
+  sprite.texture = _tm.loadTexture(gun.ammo.asset);
 
   TransformComponent transform;
   transform.height     = gun.ammo.height;

@@ -20,20 +20,19 @@ public:
 };
 
 template <typename... Types>
-using array_tuple = std::tuple<std::array<Types, MAX_ENTITIES>...>;
+using ArrayTuple = std::tuple<std::array<Types, MAX_ENTITIES>...>;
 
 class EntityManager {
 
 public:
-  typedef array_tuple<EntitySettings,
-                      SpriteComponent,
-                      TransformComponent,
-                      GunComponent,
-                      ColliderComponent>
-                                  component_arrays;
-  typedef std::stack<int>         entity_stack;
-  typedef std::unordered_set<int> entity_set;
-  typedef bool (*remove_checker)(int, EntityManager&);
+  typedef ArrayTuple<EntitySettings,
+                     SpriteComponent,
+                     TransformComponent,
+                     GunComponent,
+                     ColliderComponent>
+                                  ComponentArrays;
+  typedef std::stack<int>         EntityStack;
+  typedef std::unordered_set<int> EntitySet;
 
   class EntityInitializer {
   private:
@@ -55,18 +54,23 @@ public:
   };
 
 private:
-  entity_stack     _freeStore;
-  entity_set       _activeEntities;
-  component_arrays _componentData;
+  EntityStack     _freeStore;
+  EntitySet       _activeEntities;
+  EntitySet       _deadEntities;
+  ComponentArrays _componentData;
 
 public:
   EntityManager();
 
   EntityInitializer addEntity();
-  void              removeEntity(int id);
-  void              removeByCondition(remove_checker);
-  const entity_set& getActive();
+  void              scheduleRemoval(int entity);
+  void              removeDeadEntities();
+  const EntitySet&  getActive();
 
+private:
+  void removeEntity(int id);
+
+public:
   template <typename T>
   T& getComponent(int entity) {
     return std::get<std::array<T, MAX_ENTITIES>>(_componentData)[entity];

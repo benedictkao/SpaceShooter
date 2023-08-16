@@ -1,7 +1,5 @@
 #include "Game.h"
 #include "ColliderSystem.h"
-#include "EntityCleaner.h"
-#include "EntityManager.h"
 #include "GunManager.h"
 #include "PlayerController.h"
 #include "PositionManager.h"
@@ -37,13 +35,11 @@ int Game::run() {
   if (!_renderer)
     return GAME_INIT_ERROR::RENDERER;
 
-  EntityManager    entityManager;
-  EntityCleaner    cleaner(entityManager);
-  PositionManager  positionManager(entityManager);
-  PlayerController playerController(entityManager, _renderer);
-  TextureManager   textureManager(entityManager, _renderer);
-  GunManager       gunManager(entityManager, _renderer);
-  ColliderSystem   colliderSystem(entityManager);
+  PositionManager  positionManager(_em);
+  TextureManager   textureManager(_em, _renderer);
+  PlayerController playerController(_em, textureManager);
+  GunManager       gunManager(_em, textureManager);
+  ColliderSystem   colliderSystem(_em);
   KeyboardManager  keyboardManager(playerController);
 
   playerController.addPlayer(400, 450);
@@ -55,12 +51,12 @@ int Game::run() {
   t.height   = 50;
   t.width    = 50;
   SpriteComponent s;
-  s.texture = SDL2::loadTexture("../../../res/red-dot.png", _renderer);
+  s.texture = textureManager.loadTexture({ TextureKey::NORMAL_AMMO, "../../../res/red-dot.png" });
   ColliderComponent c;
   c.health  = 10;
   c.mass    = 5;
   c.isEnemy = true;
-  entityManager.addEntity()
+  _em.addEntity()
     .add<TransformComponent>(t)
     .add<SpriteComponent>(s)
     .add<ColliderComponent>(c);
@@ -89,7 +85,7 @@ int Game::run() {
     // ui render
     SDL2::presentScene(_renderer);
 
-    cleaner.removeDeadEntities();
+    _em.removeDeadEntities();
 
 #ifdef TEST
     auto end = std::chrono::high_resolution_clock::now();

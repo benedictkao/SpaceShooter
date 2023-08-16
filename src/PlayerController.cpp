@@ -5,8 +5,8 @@ static constexpr int  PLAYER_SPEED{ 8 };
 static constexpr int  PLAYER_HP{ 5 };
 static constexpr auto PLAYER_SPRITE_PATH{ "../../../res/player.png" };
 
-PlayerController::PlayerController(EntityManager& em, SDL2::Renderer renderer)
-    : _em(em), _renderer(renderer), _playerId(0) {}
+PlayerController::PlayerController(EntityManager& em, TextureManager& tm)
+    : _em(em), _tm(tm), _playerId(0) {}
 
 void PlayerController::addPlayer(int x, int y) {
   _playerId = _em.addEntity()
@@ -19,7 +19,7 @@ void PlayerController::addPlayer(int x, int y) {
 
 SpriteComponent PlayerController::createSprite() const {
   SpriteComponent sprite;
-  sprite.texture = SDL2::loadTexture(PLAYER_SPRITE_PATH, _renderer);
+  sprite.texture = _tm.loadWithoutCache(PLAYER_SPRITE_PATH);
   return sprite;
 }
 

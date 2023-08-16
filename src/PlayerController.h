@@ -1,15 +1,16 @@
 #pragma once
 
 #include "EntityManager.h"
+#include "TextureManager.h"
 
 class PlayerController {
 private:
   EntityManager& _em;
-  SDL2::Renderer _renderer;
+  TextureManager& _tm;
   int            _playerId;
 
 public:
-  PlayerController(EntityManager&, SDL2::Renderer);
+  PlayerController(EntityManager&, TextureManager&);
 
   void addPlayer(int x, int y);
 

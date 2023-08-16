@@ -1,15 +1,15 @@
 #pragma once
 
 #include "EntityManager.h"
-#include "SDLWrapper.h"
+#include "TextureManager.h"
 
 class GunManager {
 private:
-  EntityManager& _em;
-  SDL2::Renderer _renderer;
+  EntityManager&  _em;
+  TextureManager& _tm;
 
 public:
-  GunManager(EntityManager&, SDL2::Renderer);
+  GunManager(EntityManager&, TextureManager&);
   void shootProjectiles();
 
 private:

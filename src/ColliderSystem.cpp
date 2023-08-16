@@ -50,8 +50,13 @@ void ColliderSystem::calculateCollisions() {
       const TransformComponent& enemyTransform =
         _em.getComponent<TransformComponent>(enemy.entity);
       const SDL2::Rect enemyRect = toRect(enemyTransform);
-      if (SDL2::hasIntersect(allyRect, enemyRect))
+      if (SDL2::hasIntersect(allyRect, enemyRect)) {
         collide(ally.collider, enemy.collider);
+        if (ally.collider->health <= 0)
+          _em.scheduleRemoval(ally.entity);
+        if (enemy.collider->health <= 0)
+          _em.scheduleRemoval(enemy.entity);
+      }
     }
   }
 }

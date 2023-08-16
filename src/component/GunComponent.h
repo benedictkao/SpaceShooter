@@ -1,13 +1,14 @@
 #pragma once
-#include "Vector2D.h"
 #include "ComponentFlag.h"
+#include "TextureParams.h"
+#include "Vector2D.h"
 
 struct Ammo {
-  const char* asset;
-  int         coolDown;
-  int         speed;
-  int         width;
-  int         height;
+  TextureParams asset;
+  int           coolDown;
+  int           speed;
+  int           width;
+  int           height;
 
   static const Ammo Normal;
 };
