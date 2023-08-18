@@ -7,42 +7,42 @@ GunSystem::GunSystem(EntityManager& em, TextureRepo& textureRepo)
 void GunSystem::spawnProjectiles() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities) {
-    if (_em.getComponent<EntitySettings>(i).hasComponents(ComponentFlag::GUN)) {
+    if (_em.hasComponents(i, ComponentFlag::GUN)) {
       const TransformComponent& parentTransform =
         _em.getComponent<TransformComponent>(i);
       GunComponent& gun = _em.getComponent<GunComponent>(i);
-      if (gun.coolDown == 0) {
-        if (!gun.isFiring) {
-          return;
-        }
-        createProjectile(gun, parentTransform);
-        gun.coolDown = gun.ammo.coolDown;
-      } else {
+      if (gun.coolDown > 0) {
         --gun.coolDown;
+      } else if (gun.isFiring) {
+        bool isEnemy = _em.hasComponents(i, ComponentFlag::ENEMY);
+        createProjectile(gun, parentTransform, isEnemy);
+        gun.coolDown = gun.ammo.coolDown;
       }
     }
   }
 }
 
 void GunSystem::createProjectile(const GunComponent&       gun,
-                                 const TransformComponent& parent) {
+                                 const TransformComponent& parent,
+                                 bool                      isEnemy) {
 
   SpriteComponent sprite;
-  sprite.texture = _textureRepo.loadTexture(gun.ammo.asset);
+  sprite.texture = _textureRepo.loadTexture(gun.ammo.assetId);
 
   TransformComponent transform;
   transform.height     = gun.ammo.height;
   transform.width      = gun.ammo.width;
   transform.position.x = parent.centerX() - transform.width / 2;
-  transform.position.y = parent.position.y;
+  int offsetY = gun.direction == Direction::DOWN ? transform.height : 0;
+  transform.position.y = parent.position.y + offsetY;
   transform.speed      = gun.direction * gun.ammo.speed;
 
   ColliderComponent collider;
   collider.health  = 1;
   collider.mass    = 1;
-  collider.isEnemy = false; // TODO: this should be in a separate component
 
   _em.addEntity()
+    .setEnemy(isEnemy)
     .add<SpriteComponent>(sprite)
     .add<TransformComponent>(transform)
     .add<ColliderComponent>(collider);

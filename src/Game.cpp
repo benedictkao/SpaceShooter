@@ -17,6 +17,7 @@ enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
 
 Game::Game()
     : _playerController(_em, _texRepo)
+    , _enemyManager(_em, _texRepo)
     , _keyboardManager(_playerController)
     , _systemManager(_em, _texRepo) {}
 
@@ -36,25 +37,8 @@ int Game::run() {
   _texRepo.setRenderer(renderer);
   _systemManager.setRenderer(renderer);
 
-  _playerController.addPlayer(400, 450);
-
-  // TODO: put in separate class
-  TransformComponent t;
-  t.position = { 300, 100 };
-  t.speed    = { 0, 0 };
-  t.height   = 50;
-  t.width    = 50;
-  SpriteComponent s;
-  s.texture = _texRepo.loadTexture(
-    { TextureKey::NORMAL_AMMO, "../../../res/red-dot.png" });
-  ColliderComponent c;
-  c.health  = 10;
-  c.mass    = 5;
-  c.isEnemy = true;
-  _em.addEntity()
-    .add<TransformComponent>(t)
-    .add<SpriteComponent>(s)
-    .add<ColliderComponent>(c);
+  _playerController.addPlayer(384, 500);
+  _enemyManager.addSimpleEnemy();
 
   bool running = true;
   while (running) {

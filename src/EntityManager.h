@@ -11,11 +11,12 @@ constexpr int MAX_ENTITIES{ 50 };
 
 class EntitySettings {
 private:
-  int _componentBitSet = 0;
+  unsigned int _componentBitSet = 0;
 
 public:
-  bool hasComponents(int flags) const noexcept;
-  void addComponents(int flags);
+  bool hasComponents(unsigned int flags) const noexcept;
+  void addComponents(unsigned int flags);
+  void removeComponents(unsigned int flags);
   void clear();
 };
 
@@ -44,11 +45,12 @@ public:
 
     template <typename T>
     EntityInitializer& add(const T& component) {
-      EntitySettings& settings = _em.getComponent<EntitySettings>(_entity);
-      settings.addComponents(T::FLAG);
+      _em.addComponents(_entity, T::FLAG);
       _em.getComponent<T>(_entity) = component;
       return *this;
     }
+
+    EntityInitializer& setEnemy(bool);
 
     int id() const noexcept;
   };
@@ -80,4 +82,8 @@ public:
   const T& getComponent(int entity) const {
     return std::get<std::array<T, MAX_ENTITIES>>(_componentData)[entity];
   }
+
+  bool hasComponents(int entity, unsigned int flags) const;
+  void addComponents(int entity, unsigned int flags);
+  void removeComponents(int entity, unsigned int flags);
 };

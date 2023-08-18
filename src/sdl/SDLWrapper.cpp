@@ -44,11 +44,7 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
 }
 
 void SDL2::blit(Texture tex, Renderer renderer, int x, int y, int w, int h) {
-  SDL_Rect dest;
-  dest.x = x;
-  dest.y = y;
-  dest.w = w;
-  dest.h = h;
+  SDL_Rect dest = { x, y, w, h };
   SDL_RenderCopy(renderer, tex, NULL, &dest);
 }
 

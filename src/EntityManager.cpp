@@ -1,12 +1,16 @@
 #include "EntityManager.h"
 #include <iostream>
 
-bool EntitySettings::hasComponents(int flags) const noexcept {
+bool EntitySettings::hasComponents(unsigned int flags) const noexcept {
   return (_componentBitSet & flags) == flags;
 }
 
-void EntitySettings::addComponents(int flags) {
+void EntitySettings::addComponents(unsigned int flags) {
   _componentBitSet |= flags;
+}
+
+void EntitySettings::removeComponents(unsigned int flags) {
+  _componentBitSet &= ~flags;
 }
 
 void EntitySettings::clear() {
@@ -38,6 +42,18 @@ void EntityManager::removeEntity(int id) {
   std::cout << "Entity " << id << " destroyed" << std::endl;
 }
 
+bool EntityManager::hasComponents(int entity, unsigned int flags) const {
+  return getComponent<EntitySettings>(entity).hasComponents(flags);
+}
+
+void EntityManager::addComponents(int entity, unsigned int flags) {
+  getComponent<EntitySettings>(entity).addComponents(flags);
+}
+
+void EntityManager::removeComponents(int entity, unsigned int flags) {
+  getComponent<EntitySettings>(entity).removeComponents(flags);
+}
+
 void EntityManager::removeDeadEntities() {
   for (int entity : _deadEntities)
     removeEntity(entity);
@@ -51,6 +67,15 @@ const EntityManager::EntitySet& EntityManager::getActive() {
 EntityManager::EntityInitializer::EntityInitializer(EntityManager& em,
                                                     int            entity)
     : _em(em), _entity(entity) {}
+
+EntityManager::EntityInitializer&
+EntityManager::EntityInitializer::setEnemy(bool isEnemy) {
+  if (isEnemy)
+    _em.addComponents(_entity, ComponentFlag::ENEMY);
+  else
+    _em.removeComponents(_entity, ComponentFlag::ENEMY);
+  return *this;
+}
 
 int EntityManager::EntityInitializer::id() const noexcept {
   return _entity;

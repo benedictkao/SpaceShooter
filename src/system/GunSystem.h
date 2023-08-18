@@ -13,5 +13,5 @@ public:
   void spawnProjectiles();
 
 private:
-  void createProjectile(const GunComponent&, const TransformComponent& parent);
+  void createProjectile(const GunComponent&, const TransformComponent& parent, bool isEnemy);
 };

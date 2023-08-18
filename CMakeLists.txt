@@ -16,7 +16,6 @@ target_link_libraries(sdl INTERFACE SDL2::SDL2main) # SDL2main runs SDL2 main fu
 add_library(components STATIC)
 target_sources(components PRIVATE
     "src/component/Vector2D.cpp"
-    "src/component/GunComponent.cpp"
     "src/component/TransformComponent.cpp"
 )
 target_include_directories(components INTERFACE "${PROJECT_SOURCE_DIR}/src/component")
@@ -35,6 +34,7 @@ target_include_directories(systems INTERFACE "${PROJECT_SOURCE_DIR}/src/system")
 add_executable(main 
     "src/main.cpp" 
     "src/Game.cpp"
+    "src/EnemyManager.cpp"
     "src/EntityManager.cpp" 
     "src/PlayerController.cpp" 
     "src/KeyboardManager.cpp" 

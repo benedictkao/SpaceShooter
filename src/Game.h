@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EnemyManager.h"
 #include "EntityManager.h"
 #include "KeyboardManager.h"
 #include "PlayerController.h"
@@ -12,6 +13,7 @@ private:
   EntityManager    _em;
   TextureRepo      _texRepo;
   PlayerController _playerController;
+  EnemyManager     _enemyManager;
   KeyboardManager  _keyboardManager;
   SystemManager    _systemManager;
 

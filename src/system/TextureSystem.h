@@ -5,9 +5,6 @@
 #include <unordered_map>
 
 class TextureSystem {
-public:
-  typedef std::unordered_map<TextureKey, SDL2::Texture> TextureMap;
-
 private:
   EntityManager& _em;
   SDL2::Renderer _renderer;

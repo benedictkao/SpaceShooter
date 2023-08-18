@@ -6,7 +6,7 @@
 
 class TextureRepo {
 public:
-  typedef std::unordered_map<TextureKey, SDL2::Texture> TextureMap;
+  typedef std::unordered_map<unsigned int, SDL2::Texture> TextureMap;
 
 private:
   SDL2::Renderer _renderer;
@@ -14,6 +14,6 @@ private:
 
 public:
   void          setRenderer(SDL2::Renderer);
-  SDL2::Texture loadTexture(TextureParams);
-  SDL2::Texture loadWithoutCache(const char* path);
+  SDL2::Texture loadTexture(unsigned int id);
+  SDL2::Texture loadWithoutCache(unsigned int id);
 };
