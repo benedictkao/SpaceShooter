@@ -13,9 +13,9 @@ void EnemyManager::addSimpleEnemy() {
   s.texture = _texRepo.loadTexture(TextureId::ENEMY_SHIP);
   ColliderComponent c;
   c.health = 10;
-  c.mass   = 5;
+  c.damage = 5;
   GunComponent g;
-  g.ammo      = AmmoTypes::ENEMY_DEFAULT;
+  g.ammo      = AmmoTypes::ENEMY_BOSS;
   g.coolDown  = 36;
   g.direction = Direction::DOWN;
   g.isFiring  = true;

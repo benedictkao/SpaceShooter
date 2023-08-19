@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SDLWrapper.h"
 #include "Components.h"
+#include "SDLWrapper.h"
 #include <array>
 #include <stack>
 #include <tuple>
@@ -30,7 +30,8 @@ public:
                      SpriteComponent,
                      TransformComponent,
                      GunComponent,
-                     ColliderComponent>
+                     ColliderComponent,
+                     AnimationComponent>
                                   ComponentArrays;
   typedef std::stack<int>         EntityStack;
   typedef std::unordered_set<int> EntitySet;

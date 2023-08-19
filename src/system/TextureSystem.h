@@ -2,18 +2,21 @@
 
 #include "EntityManager.h"
 #include "SDLWrapper.h"
+#include "TextureRepo.h"
 #include <unordered_map>
 
 class TextureSystem {
 private:
   EntityManager& _em;
+  TextureRepo&   _texRepo;
   SDL2::Renderer _renderer;
 
 public:
-  TextureSystem(EntityManager&);
+  TextureSystem(EntityManager&, TextureRepo&);
   void setRenderer(SDL2::Renderer);
-  void updateTextures();
+  void updateAnimations();
+  void updateSprites();
 
 private:
-  void updateTexture(int entity);
+  void updateSprite(int entity);
 };

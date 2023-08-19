@@ -1,5 +1,6 @@
 #include "Vector2D.h"
 
+#include "AnimationComponent.h"
 #include "ColliderComponent.h"
 #include "GunComponent.h"
 #include "SpriteComponent.h"

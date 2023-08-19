@@ -43,8 +43,8 @@ GunComponent PlayerController::createGun() {
 
 ColliderComponent PlayerController::createCollider() {
   ColliderComponent collider;
-  collider.health  = PLAYER_HP;
-  collider.mass    = Mass::INFINITE;
+  collider.health = PLAYER_HP;
+  collider.damage = Mass::INFINITE;
   return collider;
 }
 

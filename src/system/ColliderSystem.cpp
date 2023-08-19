@@ -18,8 +18,8 @@ static inline SDL2::Rect toRect(const TransformComponent& transform) {
 }
 
 static inline void collide(ColliderComponent* a, ColliderComponent* b) {
-  a->health -= b->mass == Mass::INFINITE ? a->health : b->mass;
-  b->health -= a->mass == Mass::INFINITE ? b->health : a->mass;
+  a->health -= b->damage == Mass::INFINITE ? a->health : b->damage;
+  b->health -= a->damage == Mass::INFINITE ? b->health : a->damage;
   std::cout << "Collide" << std::endl;
 }
 
