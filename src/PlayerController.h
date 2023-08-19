@@ -1,15 +1,16 @@
 #pragma once
 
-#include "EntityManager.h"
+#include "../EntityManager.h"
+#include "TextureRepo.h"
 
 class PlayerController {
 private:
   EntityManager& _em;
-  SDL2::Renderer _renderer;
+  TextureRepo&   _textureRepo;
   int            _playerId;
 
 public:
-  PlayerController(EntityManager&, SDL2::Renderer);
+  PlayerController(EntityManager&, TextureRepo&);
 
   void addPlayer(int x, int y);
 
@@ -27,8 +28,8 @@ public:
   void stopShootingGun();
 
 private:
-  SpriteComponent createSprite() const;
+  SpriteComponent           createSprite() const;
   static TransformComponent createTransform(int x, int y);
-  static GunComponent createGun();
+  static GunComponent       createGun();
   static ColliderComponent  createCollider();
 };

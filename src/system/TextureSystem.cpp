@@ -1,16 +1,19 @@
-#include "TextureManager.h"
-#include <iostream>
+#include "TextureSystem.h"
 
-TextureManager::TextureManager(EntityManager& em, SDL2::Renderer renderer)
-    : _em(em), _renderer(renderer) {}
+TextureSystem::TextureSystem(EntityManager& em)
+    : _em(em) {}
 
-void TextureManager::updateTextures() {
+void TextureSystem::setRenderer(SDL2::Renderer renderer) {
+  _renderer = renderer;
+}
+
+void TextureSystem::updateTextures() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities)
     updateTexture(i);
 }
 
-void TextureManager::updateTexture(int entity) {
+void TextureSystem::updateTexture(int entity) {
   SDL2::Texture       tex = _em.getComponent<SpriteComponent>(entity).texture;
   TransformComponent& transform = _em.getComponent<TransformComponent>(entity);
   SDL2::blit(tex,

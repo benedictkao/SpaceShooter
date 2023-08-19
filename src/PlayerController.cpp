@@ -1,12 +1,12 @@
 #include "PlayerController.h"
-#include "utils/Math.h"
+#include "../utils/Math.h"
 
 static constexpr int  PLAYER_SPEED{ 8 };
 static constexpr int  PLAYER_HP{ 5 };
 static constexpr auto PLAYER_SPRITE_PATH{ "../../../res/player.png" };
 
-PlayerController::PlayerController(EntityManager& em, SDL2::Renderer renderer)
-    : _em(em), _renderer(renderer), _playerId(0) {}
+PlayerController::PlayerController(EntityManager& em, TextureRepo& textureRepo)
+    : _em(em), _textureRepo(textureRepo), _playerId(0) {}
 
 void PlayerController::addPlayer(int x, int y) {
   _playerId = _em.addEntity()
@@ -19,7 +19,7 @@ void PlayerController::addPlayer(int x, int y) {
 
 SpriteComponent PlayerController::createSprite() const {
   SpriteComponent sprite;
-  sprite.texture = SDL2::loadTexture(PLAYER_SPRITE_PATH, _renderer);
+  sprite.texture = _textureRepo.loadWithoutCache(TextureId::GREEN_SHIP);
   return sprite;
 }
 
@@ -34,7 +34,7 @@ TransformComponent PlayerController::createTransform(int x, int y) {
 
 GunComponent PlayerController::createGun() {
   GunComponent gun;
-  gun.ammo      = Ammo::Normal;
+  gun.ammo      = AmmoTypes::PLAYER_DEFAULT;
   gun.direction = Direction::UP;
   gun.coolDown  = 0;
   gun.isFiring  = false;
@@ -45,7 +45,6 @@ ColliderComponent PlayerController::createCollider() {
   ColliderComponent collider;
   collider.health  = PLAYER_HP;
   collider.mass    = Mass::INFINITE;
-  collider.isEnemy = false;
   return collider;
 }
 

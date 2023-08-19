@@ -1,12 +1,16 @@
 #include "EntityManager.h"
 #include <iostream>
 
-bool EntitySettings::hasComponents(int flags) const noexcept {
+bool EntitySettings::hasComponents(unsigned int flags) const noexcept {
   return (_componentBitSet & flags) == flags;
 }
 
-void EntitySettings::addComponents(int flags) {
+void EntitySettings::addComponents(unsigned int flags) {
   _componentBitSet |= flags;
+}
+
+void EntitySettings::removeComponents(unsigned int flags) {
+  _componentBitSet &= ~flags;
 }
 
 void EntitySettings::clear() {
@@ -23,43 +27,55 @@ EntityManager::EntityInitializer EntityManager::addEntity() {
   int entity = _freeStore.top();
   _activeEntities.insert(entity);
   _freeStore.pop();
+  getComponent<EntitySettings>(entity).clear();
   EntityInitializer initializer(*this, entity);
   return initializer;
 }
 
+void EntityManager::scheduleRemoval(int entity) {
+  _deadEntities.insert(entity);
+}
+
 void EntityManager::removeEntity(int id) {
-  getComponent<EntitySettings>(id).clear();
-  SDL2::Texture tex = getComponent<SpriteComponent>(id).texture;
-  SDL2::destroyTexture(tex);
   _activeEntities.erase(id);
   _freeStore.push(id);
   std::cout << "Entity " << id << " destroyed" << std::endl;
 }
 
-void EntityManager::removeByCondition(remove_checker shouldRemove) {
-  auto it = _activeEntities.begin();
-  while (it != _activeEntities.end()) {
-    if (shouldRemove(*it, *this)) {
-      // TODO: put in separate fun
-      _freeStore.push(*it);
-      getComponent<EntitySettings>(*it).clear();
-      SDL2::Texture tex = getComponent<SpriteComponent>(*it).texture;
-      SDL2::destroyTexture(tex);
-      std::cout << "Entity " << *it << " destroyed" << std::endl;
-      it = _activeEntities.erase(it);
-    } else {
-      ++it;
-    }
-  }
+bool EntityManager::hasComponents(int entity, unsigned int flags) const {
+  return getComponent<EntitySettings>(entity).hasComponents(flags);
 }
 
-const EntityManager::entity_set& EntityManager::getActive() {
+void EntityManager::addComponents(int entity, unsigned int flags) {
+  getComponent<EntitySettings>(entity).addComponents(flags);
+}
+
+void EntityManager::removeComponents(int entity, unsigned int flags) {
+  getComponent<EntitySettings>(entity).removeComponents(flags);
+}
+
+void EntityManager::removeDeadEntities() {
+  for (int entity : _deadEntities)
+    removeEntity(entity);
+  _deadEntities.clear();
+}
+
+const EntityManager::EntitySet& EntityManager::getActive() {
   return _activeEntities;
 }
 
 EntityManager::EntityInitializer::EntityInitializer(EntityManager& em,
                                                     int            entity)
     : _em(em), _entity(entity) {}
+
+EntityManager::EntityInitializer&
+EntityManager::EntityInitializer::setEnemy(bool isEnemy) {
+  if (isEnemy)
+    _em.addComponents(_entity, ComponentFlag::ENEMY);
+  else
+    _em.removeComponents(_entity, ComponentFlag::ENEMY);
+  return *this;
+}
 
 int EntityManager::EntityInitializer::id() const noexcept {
   return _entity;

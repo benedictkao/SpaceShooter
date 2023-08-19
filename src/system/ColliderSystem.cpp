@@ -11,12 +11,10 @@ struct ColliderPair {
 };
 
 static inline SDL2::Rect toRect(const TransformComponent& transform) {
-  SDL2::Rect rect;
-  rect.x = transform.position.x;
-  rect.y = transform.position.y;
-  rect.w = transform.width;
-  rect.h = transform.height;
-  return rect;
+  return { transform.position.x,
+           transform.position.y,
+           transform.width,
+           transform.height };
 }
 
 static inline void collide(ColliderComponent* a, ColliderComponent* b) {
@@ -31,11 +29,10 @@ void ColliderSystem::calculateCollisions() {
 
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities) {
-    bool hasCollider = _em.getComponent<EntitySettings>(i).hasComponents(
-      ComponentFlag::COLLIDER);
+    bool hasCollider = _em.hasComponents(i, ComponentFlag::COLLIDER);
     if (hasCollider) {
       ColliderComponent* collider = &_em.getComponent<ColliderComponent>(i);
-      if (collider->isEnemy)
+      if (_em.hasComponents(i, ComponentFlag::ENEMY))
         enemies.push_back({ i, collider });
       else
         allies.push_back({ i, collider });
@@ -50,8 +47,13 @@ void ColliderSystem::calculateCollisions() {
       const TransformComponent& enemyTransform =
         _em.getComponent<TransformComponent>(enemy.entity);
       const SDL2::Rect enemyRect = toRect(enemyTransform);
-      if (SDL2::hasIntersect(allyRect, enemyRect))
+      if (SDL2::hasIntersect(allyRect, enemyRect)) {
         collide(ally.collider, enemy.collider);
+        if (ally.collider->health <= 0)
+          _em.scheduleRemoval(ally.entity);
+        if (enemy.collider->health <= 0)
+          _em.scheduleRemoval(enemy.entity);
+      }
     }
   }
 }

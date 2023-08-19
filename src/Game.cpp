@@ -1,11 +1,4 @@
 #include "Game.h"
-#include "ColliderSystem.h"
-#include "EntityCleaner.h"
-#include "EntityManager.h"
-#include "GunManager.h"
-#include "PlayerController.h"
-#include "PositionManager.h"
-#include "TextureManager.h"
 #include "utils/Math.h"
 
 #if 1
@@ -22,51 +15,33 @@ static constexpr auto TARGET_FPS{ 40 };
 static constexpr auto MILLIS_PER_FRAME{ 1000 / TARGET_FPS };
 enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
 
-Game::Game() : _window(nullptr), _renderer(nullptr), _running(false) {}
+Game::Game()
+    : _playerController(_em, _texRepo)
+    , _enemyManager(_em, _texRepo)
+    , _keyboardManager(_playerController)
+    , _systemManager(_em, _texRepo) {}
 
 int Game::run() {
   const int initResult = SDL2::init();
   if (initResult != SDL2::INIT_SUCCESS)
     return GAME_INIT_ERROR::SUBSYSTEM;
 
-  _window = SDL2::createWindow(WINDOW_TITLE);
-  if (!_window)
+  SDL2::Window window = SDL2::createWindow(WINDOW_TITLE);
+  if (!window)
     return GAME_INIT_ERROR::WINDOW;
 
-  _renderer = SDL2::createRenderer(_window);
-  if (!_renderer)
+  SDL2::Renderer renderer = SDL2::createRenderer(window);
+  if (!renderer)
     return GAME_INIT_ERROR::RENDERER;
 
-  EntityManager    entityManager;
-  EntityCleaner    cleaner(entityManager);
-  PositionManager  positionManager(entityManager);
-  PlayerController playerController(entityManager, _renderer);
-  TextureManager   textureManager(entityManager, _renderer);
-  GunManager       gunManager(entityManager, _renderer);
-  ColliderSystem   colliderSystem(entityManager);
-  KeyboardManager  keyboardManager(playerController);
+  _texRepo.setRenderer(renderer);
+  _systemManager.setRenderer(renderer);
 
-  playerController.addPlayer(400, 450);
+  _playerController.addPlayer(384, 500);
+  _enemyManager.addSimpleEnemy();
 
-  // TODO: put in separate class
-  TransformComponent t;
-  t.position = { 300, 100 };
-  t.speed    = { 0, 0 };
-  t.height   = 50;
-  t.width    = 50;
-  SpriteComponent s;
-  s.texture = SDL2::loadTexture("../../../res/red-dot.png", _renderer);
-  ColliderComponent c;
-  c.health  = 10;
-  c.mass    = 5;
-  c.isEnemy = true;
-  entityManager.addEntity()
-    .add<TransformComponent>(t)
-    .add<SpriteComponent>(s)
-    .add<ColliderComponent>(c);
-
-  _running = true;
-  while (_running) {
+  bool running = true;
+  while (running) {
     // main game loop
 
 #ifdef TEST
@@ -74,22 +49,14 @@ int Game::run() {
 #endif
     Uint64 frameStart = SDL2::elapsedTimeInMillis();
 
-    SDL2::prepareScene(_renderer, 28, 28, 28, 255);
+    SDL2::prepareScene(renderer, 28, 28, 28, 255);
 
-    handleEvents(keyboardManager);
+    running = handleEvents(_keyboardManager);
 
-    positionManager.updatePositions();
-
-    colliderSystem.calculateCollisions();
-
-    gunManager.shootProjectiles();
-
-    textureManager.updateTextures();
+    _systemManager.update();
 
     // ui render
-    SDL2::presentScene(_renderer);
-
-    cleaner.removeDeadEntities();
+    SDL2::presentScene(renderer);
 
 #ifdef TEST
     auto end = std::chrono::high_resolution_clock::now();
@@ -103,18 +70,17 @@ int Game::run() {
     SDL2::delay(static_cast<Uint32>(sleepTime));
   }
 
-  SDL2::close(_window);
+  SDL2::close(window);
   return 0;
 }
 
-void Game::handleEvents(KeyboardManager km) {
+bool Game::handleEvents(KeyboardManager km) {
   SDL2::Event event;
   bool        isPressArrow = false;
   while (SDL2::pollEvent(&event)) {
     switch (event.type) { // add other events below here
       case SDL_QUIT:
-        _running = false;
-        break;
+        return false;
       case SDL_KEYDOWN:
         km.handleKeydownEvent(event);
         break;
@@ -125,6 +91,7 @@ void Game::handleEvents(KeyboardManager km) {
         break;
     }
   }
+  return true;
 }
 
 Uint64 Game::calculateSleepTime(Uint64 frameStart) {

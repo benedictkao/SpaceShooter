@@ -8,7 +8,6 @@ namespace Mass {
 struct ColliderComponent {
   int  health;
   int  mass;
-  bool isEnemy;
 
   static constexpr ComponentFlag FLAG{ ComponentFlag::COLLIDER };
 };

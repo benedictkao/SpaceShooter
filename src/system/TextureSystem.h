@@ -2,14 +2,16 @@
 
 #include "EntityManager.h"
 #include "SDLWrapper.h"
+#include <unordered_map>
 
-class TextureManager {
+class TextureSystem {
 private:
   EntityManager& _em;
   SDL2::Renderer _renderer;
 
 public:
-  TextureManager(EntityManager&, SDL2::Renderer);
+  TextureSystem(EntityManager&);
+  void setRenderer(SDL2::Renderer);
   void updateTextures();
 
 private:

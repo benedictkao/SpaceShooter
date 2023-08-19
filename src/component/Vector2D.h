@@ -5,7 +5,8 @@ struct Vector2D {
   int y;
 
   Vector2D operator*(int) const;
-};
+  bool operator==(const Vector2D&) const noexcept;
+};	
 
 namespace Direction {
   constexpr Vector2D UP{ 0, -1 };

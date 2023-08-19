@@ -6,3 +6,7 @@ Vector2D Vector2D::operator*(int multiplier) const {
   result.y = y * multiplier;
   return result;
 }
+
+bool Vector2D::operator==(const Vector2D& rhs) const noexcept {
+  return x == rhs.x && y == rhs.y;
+}

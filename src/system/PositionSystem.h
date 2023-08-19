@@ -2,12 +2,12 @@
 
 #include "EntityManager.h"
 
-class PositionManager {
+class PositionSystem {
 private:
   EntityManager& _em;
 
 public:
-  PositionManager(EntityManager&);
+  PositionSystem(EntityManager&);
   void updatePositions();
 
 private:

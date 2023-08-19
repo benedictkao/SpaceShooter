@@ -1,7 +1,7 @@
 #pragma once
 
-#include "PlayerController.h"
 #include "SDLWrapper.h"
+#include "PlayerController.h"
 
 class KeyboardManager {
 private:
