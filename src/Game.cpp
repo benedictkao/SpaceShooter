@@ -1,7 +1,7 @@
 #include "Game.h"
 #include "utils/Math.h"
 
-#if 1
+#if 0
 #define TEST
 #endif
 
@@ -19,7 +19,7 @@ Game::Game()
     : _playerController(_em, _texRepo)
     , _enemyManager(_em, _texRepo)
     , _keyboardManager(_playerController)
-    , _systemManager(_em, _texRepo) {}
+    , _systemManager(_em, _texRepo, _playerController) {}
 
 int Game::run() {
   const int initResult = SDL2::init();

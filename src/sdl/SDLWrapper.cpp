@@ -1,8 +1,6 @@
 #include "SDLWrapper.h"
+#include "Constants.h"
 #include <SDL_image.h>
-
-static constexpr auto DEFAULT_WINDOW_WIDTH{ 800 };
-static constexpr auto DEFAULT_WINDOW_HEIGHT{ 640 };
 
 Uint32 SDL2::init() {
   return SDL_Init(SDL_INIT_VIDEO);
@@ -12,8 +10,8 @@ SDL2::Window SDL2::createWindow(const char* title) {
   return SDL_CreateWindow(title,
                           SDL_WINDOWPOS_CENTERED,
                           SDL_WINDOWPOS_CENTERED,
-                          DEFAULT_WINDOW_WIDTH,
-                          DEFAULT_WINDOW_HEIGHT,
+                          Constants::WINDOW_WIDTH,
+                          Constants::WINDOW_HEIGHT,
                           false);
 }
 
@@ -43,9 +41,15 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
   return texture;
 }
 
-void SDL2::blit(Texture tex, Renderer renderer, int x, int y, int w, int h) {
-  SDL_Rect dest = { x, y, w, h };
+void SDL2::blit(Texture tex, Renderer renderer, const Rect& dest) {
   SDL_RenderCopy(renderer, tex, NULL, &dest);
+}
+
+void SDL2::blit(Texture     tex,
+                Renderer    renderer,
+                const Rect& src,
+                const Rect& dest) {
+  SDL_RenderCopy(renderer, tex, &src, &dest);
 }
 
 void SDL2::destroyTexture(Texture tex) {

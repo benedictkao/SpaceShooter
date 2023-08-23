@@ -1,15 +1,13 @@
 #include "PositionSystem.h"
-
-static constexpr auto LOWER_LIMIT_X{ 0 };
-static constexpr auto UPPER_LIMIT_X{ 800 };
-static constexpr auto LOWER_LIMIT_Y{ 0 };
-static constexpr auto UPPER_LIMIT_Y{ 640 };
+#include "Constants.h"
 
 PositionSystem::PositionSystem(EntityManager& em) : _em(em) {}
 
-static bool isOutOfBounds(Vector2D& position) {
-  return position.x < LOWER_LIMIT_X || position.x > UPPER_LIMIT_X ||
-         position.y < LOWER_LIMIT_Y || position.y > UPPER_LIMIT_Y;
+static constexpr bool isOutOfBounds(const TransformComponent& transform) {
+  return transform.position.x + transform.width < Constants::X_MIN ||
+         transform.position.x > Constants::WINDOW_WIDTH ||
+         transform.position.y + transform.height < Constants::Y_MIN ||
+         transform.position.y > Constants::WINDOW_HEIGHT;
 }
 
 void PositionSystem::updatePositions() {
@@ -17,7 +15,7 @@ void PositionSystem::updatePositions() {
   for (int i : activeEntities) {
     TransformComponent& transform = _em.getComponent<TransformComponent>(i);
     updatePosition(_em.getComponent<TransformComponent>(i));
-    if (isOutOfBounds(transform.position))
+    if (isOutOfBounds(transform))
       _em.scheduleRemoval(i);
   }
 }

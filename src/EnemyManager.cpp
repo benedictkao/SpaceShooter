@@ -12,17 +12,18 @@ void EnemyManager::addSimpleEnemy() {
   SpriteComponent s;
   s.texture = _texRepo.loadTexture(TextureId::ENEMY_SHIP);
   ColliderComponent c;
-  c.health = 10;
-  c.damage = 5;
+  c.health    = 10;
+  c.damage    = 5;
+  c.deathAnim = AnimationId::DEFAULT_EXPLOSION;
   GunComponent g;
   g.ammo      = AmmoTypes::ENEMY_BOSS;
   g.coolDown  = 36;
   g.direction = Direction::DOWN;
   g.isFiring  = true;
   _em.addEntity()
-    .setEnemy(true)
     .add<TransformComponent>(t)
     .add<SpriteComponent>(s)
     .add<ColliderComponent>(c)
-    .add<GunComponent>(g);
+    .add<GunComponent>(g)
+    .addFlags(ComponentFlag::ENEMY);
 }

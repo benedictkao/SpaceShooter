@@ -33,17 +33,20 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   transform.height     = gun.ammo.height;
   transform.width      = gun.ammo.width;
   transform.position.x = parent.centerX() - transform.width / 2;
-  int offsetY = gun.direction == Direction::DOWN ? parent.height : 0;
+  int offsetY          = gun.direction == Direction::DOWN ? parent.height : 0;
   transform.position.y = parent.position.y + offsetY;
   transform.speed      = gun.direction * gun.ammo.speed;
 
   ColliderComponent collider;
-  collider.health = 1;
-  collider.damage = gun.ammo.damage;
+  collider.health    = 1;
+  collider.damage    = gun.ammo.damage;
+  collider.deathAnim = AnimationId::NONE;
+
+  unsigned int enemyFlag = isEnemy ? ComponentFlag::ENEMY : 0;
 
   _em.addEntity()
-    .setEnemy(isEnemy)
     .add<SpriteComponent>(sprite)
     .add<TransformComponent>(transform)
-    .add<ColliderComponent>(collider);
+    .add<ColliderComponent>(collider)
+    .addFlags(enemyFlag);
 }

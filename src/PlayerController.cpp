@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 #include "../utils/Math.h"
+#include "Constants.h"
 
 static constexpr int  PLAYER_SPEED{ 8 };
 static constexpr int  PLAYER_HP{ 5 };
@@ -15,6 +16,25 @@ void PlayerController::addPlayer(int x, int y) {
                 .add<GunComponent>(createGun())
                 .add<ColliderComponent>(createCollider())
                 .id();
+}
+
+bool PlayerController::isPlayer(int id) const {
+  return id == _playerId;
+}
+
+int PlayerController::getPlayerId() const {
+  return _playerId;
+}
+
+void PlayerController::keepWithinWindow() {
+  TransformComponent& transform =
+    _em.getComponent<TransformComponent>(_playerId);
+  coerceBetween(transform.position.x,
+                0,
+                Constants::WINDOW_WIDTH - transform.width);
+  coerceBetween(transform.position.y,
+                0,
+                Constants::WINDOW_HEIGHT - transform.height);
 }
 
 SpriteComponent PlayerController::createSprite() const {
@@ -43,8 +63,9 @@ GunComponent PlayerController::createGun() {
 
 ColliderComponent PlayerController::createCollider() {
   ColliderComponent collider;
-  collider.health = PLAYER_HP;
-  collider.damage = Mass::INFINITE;
+  collider.health    = PLAYER_HP;
+  collider.damage    = Mass::INFINITE;
+  collider.deathAnim = AnimationId::DEFAULT_EXPLOSION;
   return collider;
 }
 

@@ -29,3 +29,11 @@ template <typename T>
 constexpr void coerceNegative(T& value) noexcept {
   coerceAtMost(value, static_cast<T>(0));
 }
+
+template <typename T>
+constexpr void coerceBetween(T& value, const T& min, const T& max) noexcept {
+  if (value < min)
+    value = min;
+  else if (value > max)
+    value = max;
+}

@@ -13,6 +13,9 @@ public:
   PlayerController(EntityManager&, TextureRepo&);
 
   void addPlayer(int x, int y);
+  bool isPlayer(int) const;
+  int  getPlayerId() const;
+  void keepWithinWindow();
 
   void movePlayerUp();
   void movePlayerDown();

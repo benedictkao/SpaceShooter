@@ -1,12 +1,17 @@
 #include "TextureSystem.h"
+#include "utils/Math.h"
 
-TextureSystem::TextureSystem(EntityManager& em, TextureRepo& texRepo)
-    : _em(em), _texRepo(texRepo) {}
+#include <iostream>
+
+static constexpr auto ANIMATION_WIDTH{ 4 };
+static constexpr auto ANIMATION_HEIGHT{ 4 };
+static constexpr auto ANIMATION_FRAMES{ 16 };
+
+TextureSystem::TextureSystem(EntityManager& em) : _em(em) {}
 
 void TextureSystem::setRenderer(SDL2::Renderer renderer) {
   _renderer = renderer;
 }
-
 
 void TextureSystem::updateAnimations() {
   const auto& activeEntities = _em.getActive();
@@ -14,7 +19,20 @@ void TextureSystem::updateAnimations() {
     if (_em.hasComponents(i, ComponentFlag::ANIMATION)) {
       AnimationComponent& animation = _em.getComponent<AnimationComponent>(i);
       TransformComponent& transform = _em.getComponent<TransformComponent>(i);
-      SDL2::Texture       tex       = _texRepo.loadTexture(animation.texId);
+
+      SDL2::Rect src;
+      src.x = animation.currFrame % ANIMATION_WIDTH * animation.width;
+      src.y = animation.currFrame / ANIMATION_HEIGHT * animation.height;
+      src.w = animation.width;
+      src.h = animation.height;
+      if (++animation.currFrame == ANIMATION_FRAMES)
+        _em.scheduleRemoval(i);
+
+      SDL2::Rect dest = { transform.position.x,
+                          transform.position.y,
+                          transform.width,
+                          transform.height };
+      SDL2::blit(animation.tex, _renderer, src, dest);
     }
   }
 }
@@ -22,16 +40,16 @@ void TextureSystem::updateAnimations() {
 void TextureSystem::updateSprites() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities)
-    updateSprite(i);
+    if (_em.hasComponents(i, ComponentFlag::SPRITE))
+      updateSprite(i);
 }
 
 void TextureSystem::updateSprite(int entity) {
   SDL2::Texture       tex = _em.getComponent<SpriteComponent>(entity).texture;
   TransformComponent& transform = _em.getComponent<TransformComponent>(entity);
-  SDL2::blit(tex,
-             _renderer,
-             transform.position.x,
-             transform.position.y,
-             transform.width,
-             transform.height);
+  SDL2::Rect          dest      = { transform.position.x,
+                                    transform.position.y,
+                                    transform.width,
+                                    transform.height };
+  SDL2::blit(tex, _renderer, dest);
 }

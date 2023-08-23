@@ -17,3 +17,20 @@ namespace TextureId {
     return PATHS[id];
   }
 } // namespace TextureId
+
+const struct AnimationParams {
+  unsigned int texId;
+  unsigned int width;
+  unsigned int height;
+};
+
+namespace AnimationId {
+  constexpr int NONE              = -1;
+  constexpr int DEFAULT_EXPLOSION = 0;
+
+  constexpr AnimationParams PARAMS[] = { { TextureId::EXPLOSION, 32, 32 } };
+
+  constexpr AnimationParams getParams(unsigned int id) {
+    return PARAMS[id];
+  }
+} // namespace AnimationId

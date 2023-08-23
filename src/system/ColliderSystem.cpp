@@ -3,12 +3,8 @@
 #include <iostream>
 #include <vector>
 
-ColliderSystem::ColliderSystem(EntityManager& em) : _em(em) {}
-
-struct ColliderPair {
-  int                entity;
-  ColliderComponent* collider;
-};
+ColliderSystem::ColliderSystem(EntityManager& em, TextureRepo& texRepo)
+    : _em(em), _texRepo(texRepo) {}
 
 static inline SDL2::Rect toRect(const TransformComponent& transform) {
   return { transform.position.x,
@@ -40,20 +36,37 @@ void ColliderSystem::calculateCollisions() {
   }
 
   for (auto& ally : allies) {
-    const TransformComponent& allyTransform =
+    TransformComponent& allyTransform =
       _em.getComponent<TransformComponent>(ally.entity);
     const SDL2::Rect allyRect = toRect(allyTransform);
     for (auto& enemy : enemies) {
-      const TransformComponent& enemyTransform =
+      TransformComponent& enemyTransform =
         _em.getComponent<TransformComponent>(enemy.entity);
       const SDL2::Rect enemyRect = toRect(enemyTransform);
       if (SDL2::hasIntersect(allyRect, enemyRect)) {
         collide(ally.collider, enemy.collider);
         if (ally.collider->health <= 0)
-          _em.scheduleRemoval(ally.entity);
+          handleDeadEntity(ally, allyTransform);
         if (enemy.collider->health <= 0)
-          _em.scheduleRemoval(enemy.entity);
+          handleDeadEntity(enemy, enemyTransform);
       }
     }
+  }
+}
+
+void ColliderSystem::handleDeadEntity(const ColliderPair& pair,
+                                      TransformComponent& transform) {
+  if (pair.collider->deathAnim == AnimationId::NONE) {
+    _em.scheduleRemoval(pair.entity);
+  } else {
+    AnimationComponent& a = _em.getComponent<AnimationComponent>(pair.entity);
+    const auto& params    = AnimationId::getParams(pair.collider->deathAnim);
+    a.tex                 = _texRepo.loadTexture(params.texId);
+    a.width               = params.width;
+    a.height              = params.height;
+    a.currFrame           = 0;
+    transform.speed       = { 0, 0 };
+    _em.setComponents(pair.entity,
+                      ComponentFlag::TRANSFORM | ComponentFlag::ANIMATION);
   }
 }
