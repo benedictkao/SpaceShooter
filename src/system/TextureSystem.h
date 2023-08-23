@@ -12,8 +12,9 @@ private:
 public:
   TextureSystem(EntityManager&);
   void setRenderer(SDL2::Renderer);
-  void updateTextures();
+  void updateAnimations();
+  void updateSprites();
 
 private:
-  void updateTexture(int entity);
+  void updateSprite(int entity);
 };

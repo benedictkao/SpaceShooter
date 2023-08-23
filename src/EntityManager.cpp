@@ -9,6 +9,10 @@ void EntitySettings::addComponents(unsigned int flags) {
   _componentBitSet |= flags;
 }
 
+void EntitySettings::setComponents(unsigned int flags) {
+  _componentBitSet = flags;
+}
+
 void EntitySettings::removeComponents(unsigned int flags) {
   _componentBitSet &= ~flags;
 }
@@ -50,6 +54,10 @@ void EntityManager::addComponents(int entity, unsigned int flags) {
   getComponent<EntitySettings>(entity).addComponents(flags);
 }
 
+void EntityManager::setComponents(int entity, unsigned int flags) {
+  getComponent<EntitySettings>(entity).setComponents(flags);
+}
+
 void EntityManager::removeComponents(int entity, unsigned int flags) {
   getComponent<EntitySettings>(entity).removeComponents(flags);
 }
@@ -69,11 +77,8 @@ EntityManager::EntityInitializer::EntityInitializer(EntityManager& em,
     : _em(em), _entity(entity) {}
 
 EntityManager::EntityInitializer&
-EntityManager::EntityInitializer::setEnemy(bool isEnemy) {
-  if (isEnemy)
-    _em.addComponents(_entity, ComponentFlag::ENEMY);
-  else
-    _em.removeComponents(_entity, ComponentFlag::ENEMY);
+EntityManager::EntityInitializer::addFlags(unsigned int flags) {
+  _em.addComponents(_entity, flags);
   return *this;
 }
 

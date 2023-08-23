@@ -9,6 +9,7 @@ find_package(SDL2_image REQUIRED)
 
 add_library(sdl STATIC)
 target_sources(sdl PRIVATE "src/sdl/SDLWrapper.cpp")
+target_include_directories(sdl PRIVATE "${PROJECT_SOURCE_DIR}/src")
 target_include_directories(sdl INTERFACE "${PROJECT_SOURCE_DIR}/src/sdl")
 target_link_libraries(sdl PUBLIC SDL2::SDL2 SDL2_image::SDL2_image)
 target_link_libraries(sdl INTERFACE SDL2::SDL2main) # SDL2main runs SDL2 main function which then calls the source main

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "SDLWrapper.h"
 #include "Components.h"
+#include "SDLWrapper.h"
 #include <array>
 #include <stack>
 #include <tuple>
@@ -16,6 +16,7 @@ private:
 public:
   bool hasComponents(unsigned int flags) const noexcept;
   void addComponents(unsigned int flags);
+  void setComponents(unsigned int flags);
   void removeComponents(unsigned int flags);
   void clear();
 };
@@ -30,7 +31,8 @@ public:
                      SpriteComponent,
                      TransformComponent,
                      GunComponent,
-                     ColliderComponent>
+                     ColliderComponent,
+                     AnimationComponent>
                                   ComponentArrays;
   typedef std::stack<int>         EntityStack;
   typedef std::unordered_set<int> EntitySet;
@@ -50,7 +52,7 @@ public:
       return *this;
     }
 
-    EntityInitializer& setEnemy(bool);
+    EntityInitializer& addFlags(unsigned int);
 
     int id() const noexcept;
   };
@@ -85,5 +87,6 @@ public:
 
   bool hasComponents(int entity, unsigned int flags) const;
   void addComponents(int entity, unsigned int flags);
+  void setComponents(int entity, unsigned int flags);
   void removeComponents(int entity, unsigned int flags);
 };

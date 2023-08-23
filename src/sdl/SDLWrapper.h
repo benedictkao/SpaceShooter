@@ -21,7 +21,9 @@ namespace SDL2 {
 
   Texture loadTexture(const char*, Renderer);
 
-  void blit(Texture, Renderer, int x, int y, int w, int h);
+  void blit(Texture, Renderer, const Rect& dest);
+
+  void blit(Texture, Renderer, const Rect& src, const Rect& dest);
 
   void destroyTexture(Texture);
 
