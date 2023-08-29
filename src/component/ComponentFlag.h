@@ -6,5 +6,5 @@ enum ComponentFlag : unsigned int {
   GUN       = 1 << 2,
   COLLIDER  = 1 << 3,
   ANIMATION = 1 << 4,
-  ENEMY     = 1 << 31
+  ENEMY     = static_cast<unsigned int>(1) << 31
 };

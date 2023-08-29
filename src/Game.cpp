@@ -1,7 +1,8 @@
 #include "Game.h"
+#include "Constants.h"
 #include "utils/Math.h"
 
-#if 0
+#if 1
 #define TEST
 #endif
 
@@ -10,23 +11,27 @@
 #include <iostream>
 #endif
 
-static constexpr auto WINDOW_TITLE{ "Shoot 'Em Up" };
 static constexpr auto TARGET_FPS{ 40 };
 static constexpr auto MILLIS_PER_FRAME{ 1000 / TARGET_FPS };
 enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
 
 Game::Game()
     : _playerController(_em, _texRepo)
-    , _enemyManager(_em, _texRepo)
-    , _keyboardManager(_playerController)
-    , _systemManager(_em, _texRepo, _playerController) {}
+    , _textRenderer(_em, _texRepo)
+    , _levelManager(_em, _playerController, _texRepo, _textRenderer)
+    , _keyboardManager(_playerController, _levelManager)
+    , _systemManager(_em,
+                     _texRepo,
+                     _playerController,
+                     _textRenderer,
+                     _levelManager) {}
 
 int Game::run() {
   const int initResult = SDL2::init();
   if (initResult != SDL2::INIT_SUCCESS)
     return GAME_INIT_ERROR::SUBSYSTEM;
 
-  SDL2::Window window = SDL2::createWindow(WINDOW_TITLE);
+  SDL2::Window window = SDL2::createWindow(Constants::GAME_NAME);
   if (!window)
     return GAME_INIT_ERROR::WINDOW;
 
@@ -35,10 +40,7 @@ int Game::run() {
     return GAME_INIT_ERROR::RENDERER;
 
   _texRepo.setRenderer(renderer);
-  _systemManager.setRenderer(renderer);
-
-  _playerController.addPlayer(384, 500);
-  _enemyManager.addSimpleEnemy();
+  _systemManager.init(renderer);
 
   bool running = true;
   while (running) {
@@ -76,7 +78,6 @@ int Game::run() {
 
 bool Game::handleEvents(KeyboardManager km) {
   SDL2::Event event;
-  bool        isPressArrow = false;
   while (SDL2::pollEvent(&event)) {
     switch (event.type) { // add other events below here
       case SDL_QUIT:

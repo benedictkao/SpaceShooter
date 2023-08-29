@@ -7,7 +7,7 @@ static constexpr int  PLAYER_HP{ 5 };
 static constexpr auto PLAYER_SPRITE_PATH{ "../../../res/player.png" };
 
 PlayerController::PlayerController(EntityManager& em, TextureRepo& textureRepo)
-    : _em(em), _textureRepo(textureRepo), _playerId(0) {}
+    : _em(em), _textureRepo(textureRepo), _playerId(-1) {}
 
 void PlayerController::addPlayer(int x, int y) {
   _playerId = _em.addEntity()
@@ -35,6 +35,10 @@ void PlayerController::keepWithinWindow() {
   coerceBetween(transform.position.y,
                 0,
                 Constants::WINDOW_HEIGHT - transform.height);
+}
+
+bool PlayerController::checkPlayerDead() {
+  return _em.isScheduledForRemoval(_playerId);
 }
 
 SpriteComponent PlayerController::createSprite() const {
@@ -83,6 +87,10 @@ void PlayerController::movePlayerLeft() {
 
 void PlayerController::movePlayerRight() {
   _em.getComponent<TransformComponent>(_playerId).speed.x = PLAYER_SPEED;
+}
+
+void PlayerController::stopMovingPlayer() {
+  _em.getComponent<TransformComponent>(_playerId).speed = { 0, 0 };
 }
 
 void PlayerController::stopMovingPlayerUp() {

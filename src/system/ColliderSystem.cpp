@@ -56,17 +56,17 @@ void ColliderSystem::calculateCollisions() {
 
 void ColliderSystem::handleDeadEntity(const ColliderPair& pair,
                                       TransformComponent& transform) {
-  if (pair.collider->deathAnim == AnimationId::NONE) {
-    _em.scheduleRemoval(pair.entity);
-  } else {
-    AnimationComponent& a = _em.getComponent<AnimationComponent>(pair.entity);
-    const auto& params    = AnimationId::getParams(pair.collider->deathAnim);
-    a.tex                 = _texRepo.loadTexture(params.texId);
-    a.width               = params.width;
-    a.height              = params.height;
-    a.currFrame           = 0;
-    transform.speed       = { 0, 0 };
-    _em.setComponents(pair.entity,
-                      ComponentFlag::TRANSFORM | ComponentFlag::ANIMATION);
+  _em.scheduleRemoval(pair.entity);
+
+  if (pair.collider->deathAnim != AnimationId::NONE) {
+    AnimationComponent a;
+    const auto& params = AnimationId::getParams(pair.collider->deathAnim);
+    a.tex              = _texRepo.loadTexture(params.texId);
+    a.width            = params.width;
+    a.height           = params.height;
+    a.currFrame        = 0;
+    transform.speed    = { 0, 0 };
+    _em.addEntity().add<TransformComponent>(transform).add<AnimationComponent>(
+      a);
   }
 }

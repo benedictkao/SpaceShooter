@@ -16,12 +16,14 @@ public:
   bool isPlayer(int) const;
   int  getPlayerId() const;
   void keepWithinWindow();
+  bool checkPlayerDead();
 
   void movePlayerUp();
   void movePlayerDown();
   void movePlayerLeft();
   void movePlayerRight();
 
+  void stopMovingPlayer();
   void stopMovingPlayerUp();
   void stopMovingPlayerDown();
   void stopMovingPlayerLeft();

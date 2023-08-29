@@ -6,12 +6,13 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+find_package(SDL2_ttf REQUIRED)
 
 add_library(sdl STATIC)
 target_sources(sdl PRIVATE "src/sdl/SDLWrapper.cpp")
 target_include_directories(sdl PRIVATE "${PROJECT_SOURCE_DIR}/src")
 target_include_directories(sdl INTERFACE "${PROJECT_SOURCE_DIR}/src/sdl")
-target_link_libraries(sdl PUBLIC SDL2::SDL2 SDL2_image::SDL2_image)
+target_link_libraries(sdl PUBLIC SDL2::SDL2 SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 target_link_libraries(sdl INTERFACE SDL2::SDL2main) # SDL2main runs SDL2 main function which then calls the source main
 
 add_library(components STATIC)
@@ -41,6 +42,8 @@ add_executable(main
     "src/KeyboardManager.cpp" 
     "src/TextureRepo.cpp"
     "src/SystemManager.cpp"
+    "src/LevelManager.cpp"
+    "src/TextRenderer.cpp"
 )
 target_link_libraries(main
     sdl

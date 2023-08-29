@@ -38,7 +38,7 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   transform.speed      = gun.direction * gun.ammo.speed;
 
   ColliderComponent collider;
-  collider.health    = 1;
+  collider.health    = gun.ammo.damage;
   collider.damage    = gun.ammo.damage;
   collider.deathAnim = AnimationId::NONE;
 

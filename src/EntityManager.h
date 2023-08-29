@@ -68,6 +68,8 @@ public:
 
   EntityInitializer addEntity();
   void              scheduleRemoval(int entity);
+  bool              cancelRemoval(int entity);
+  bool              isScheduledForRemoval(int entity) const;
   void              removeDeadEntities();
   const EntitySet&  getActive();
 

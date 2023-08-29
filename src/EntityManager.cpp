@@ -40,6 +40,14 @@ void EntityManager::scheduleRemoval(int entity) {
   _deadEntities.insert(entity);
 }
 
+bool EntityManager::cancelRemoval(int entity) {
+  return _deadEntities.erase(entity) > 0;
+}
+
+bool EntityManager::isScheduledForRemoval(int entity) const {
+  return _deadEntities.count(entity) > 0;
+}
+
 void EntityManager::removeEntity(int id) {
   _activeEntities.erase(id);
   _freeStore.push(id);

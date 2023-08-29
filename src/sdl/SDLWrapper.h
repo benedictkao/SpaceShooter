@@ -3,11 +3,18 @@
 #include <SDL.h>
 
 namespace SDL2 {
+
   typedef SDL_Window*   Window;
   typedef SDL_Renderer* Renderer;
   typedef SDL_Texture*  Texture;
   typedef SDL_Event     Event;
   typedef SDL_Rect      Rect;
+
+  struct TextureData {
+    Texture tex;
+    int     width;
+    int     height;
+  };
 
   constexpr auto INIT_SUCCESS{ 0 };
 
@@ -20,6 +27,8 @@ namespace SDL2 {
   Uint32 pollEvent(Event*);
 
   Texture loadTexture(const char*, Renderer);
+
+  TextureData loadText(const char*, int size, Renderer);
 
   void blit(Texture, Renderer, const Rect& dest);
 
