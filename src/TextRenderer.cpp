@@ -13,7 +13,6 @@ void TextRenderer::showCenterText(const char* title, const char* subtitle) {
   int               y     = Constants::WINDOW_HEIGHT / 3;
 
   TransformComponent t;
-  t.speed           = { 0, 0 };
   t.position        = { x, y };
   t.height          = tData.height;
   t.width           = tData.width;

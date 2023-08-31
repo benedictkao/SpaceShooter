@@ -1,10 +1,15 @@
 #pragma once
 
+constexpr unsigned int ONE{ 1 };
+
 enum ComponentFlag : unsigned int {
-  TRANSFORM = 1 << 0,
-  SPRITE    = 1 << 1,
-  GUN       = 1 << 2,
-  COLLIDER  = 1 << 3,
-  ANIMATION = 1 << 4,
-  ENEMY     = static_cast<unsigned int>(1) << 31
+  TRANSFORM = ONE << 0,
+  SPRITE    = ONE << 1,
+  GUN       = ONE << 2,
+  COLLIDER  = ONE << 3,
+  ANIMATION = ONE << 4,
+  SPEED     = ONE << 5,
+  SPAWN     = ONE << 6,
+  TEXT      = ONE << 7,
+  ENEMY     = ONE << 31
 };

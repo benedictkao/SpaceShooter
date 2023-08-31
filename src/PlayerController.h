@@ -17,6 +17,7 @@ public:
   int  getPlayerId() const;
   void keepWithinWindow();
   bool checkPlayerDead();
+  void reset();
 
   void movePlayerUp();
   void movePlayerDown();

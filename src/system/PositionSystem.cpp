@@ -13,14 +13,18 @@ static constexpr bool isOutOfBounds(const TransformComponent& transform) {
 void PositionSystem::updatePositions() {
   const auto& activeEntities = _em.getActive();
   for (int i : activeEntities) {
-    TransformComponent& transform = _em.getComponent<TransformComponent>(i);
-    updatePosition(_em.getComponent<TransformComponent>(i));
-    if (isOutOfBounds(transform))
-      _em.scheduleRemoval(i);
+    if (_em.hasComponents(i, ComponentFlag::SPEED)) {
+      const SpeedComponent& speed     = _em.getComponent<SpeedComponent>(i);
+      TransformComponent&   transform = _em.getComponent<TransformComponent>(i);
+      updatePosition(speed, transform);
+      if (isOutOfBounds(transform))
+        _em.scheduleRemoval(i);
+    }
   }
 }
 
-void PositionSystem::updatePosition(TransformComponent& transform) {
-  transform.position.x += transform.speed.x;
-  transform.position.y += transform.speed.y;
+void PositionSystem::updatePosition(const SpeedComponent& speed,
+                                    TransformComponent&   transform) {
+  transform.position.x += speed.x;
+  transform.position.y += speed.y;
 }

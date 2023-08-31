@@ -35,7 +35,8 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   transform.position.x = parent.centerX() - transform.width / 2;
   int offsetY          = gun.direction == Direction::DOWN ? parent.height : 0;
   transform.position.y = parent.position.y + offsetY;
-  transform.speed      = gun.direction * gun.ammo.speed;
+
+  SpeedComponent speed = static_cast<SpeedComponent>(gun.direction * gun.ammo.speed);
 
   ColliderComponent collider;
   collider.health    = gun.ammo.damage;
@@ -47,6 +48,7 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   _em.addEntity()
     .add<SpriteComponent>(sprite)
     .add<TransformComponent>(transform)
+    .add<SpeedComponent>(speed)
     .add<ColliderComponent>(collider)
     .addFlags(enemyFlag);
 }

@@ -11,5 +11,5 @@ public:
   void updatePositions();
 
 private:
-  void updatePosition(TransformComponent&);
+  void updatePosition(const SpeedComponent&, TransformComponent&);
 };

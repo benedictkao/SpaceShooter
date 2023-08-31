@@ -2,11 +2,11 @@
 #include "Constants.h"
 #include "utils/Math.h"
 
-#if 1
-#define TEST
+#ifndef NDEBUG
+#define TIME
 #endif
 
-#ifdef TEST
+#ifdef TIME
 #include <chrono>
 #include <iostream>
 #endif
@@ -46,7 +46,7 @@ int Game::run() {
   while (running) {
     // main game loop
 
-#ifdef TEST
+#ifdef TIME
     auto start = std::chrono::high_resolution_clock::now();
 #endif
     Uint64 frameStart = SDL2::elapsedTimeInMillis();
@@ -60,7 +60,7 @@ int Game::run() {
     // ui render
     SDL2::presentScene(renderer);
 
-#ifdef TEST
+#ifdef TIME
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed_time =
       std::chrono::duration_cast<std::chrono::microseconds>(end - start)

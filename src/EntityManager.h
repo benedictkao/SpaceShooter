@@ -32,7 +32,9 @@ public:
                      TransformComponent,
                      GunComponent,
                      ColliderComponent,
-                     AnimationComponent>
+                     AnimationComponent,
+                     SpawnComponent,
+                     SpeedComponent>
                                   ComponentArrays;
   typedef std::stack<int>         EntityStack;
   typedef std::unordered_set<int> EntitySet;
@@ -70,7 +72,9 @@ public:
   void              scheduleRemoval(int entity);
   bool              cancelRemoval(int entity);
   bool              isScheduledForRemoval(int entity) const;
+  bool              isActive(int entity) const;
   void              removeDeadEntities();
+  void              reset();
   const EntitySet&  getActive();
 
 private:

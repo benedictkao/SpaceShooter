@@ -49,7 +49,7 @@ SDL2::TextureData SDL2::loadText(const char* text, int size, Renderer renderer) 
   // TODO: take this as input
   SDL_Color color = { 204, 204, 0 };
   // TODO: store this somewhere?
-  TTF_Font*    font = TTF_OpenFont("../../../res/retro.ttf", size);
+  TTF_Font*    font = TTF_OpenFont("../../../res/font/retro.ttf", size);
   SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, color);
 
   Texture     tex  = SDL_CreateTextureFromSurface(renderer, textSurface);

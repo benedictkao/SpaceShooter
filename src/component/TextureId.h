@@ -7,12 +7,15 @@ namespace TextureId {
   constexpr unsigned int BLUE_BULLET  = 3;
   constexpr unsigned int ENEMY_SHIP   = 4;
   constexpr unsigned int EXPLOSION    = 5;
+  constexpr unsigned int BASIC_ENEMY  = 6;
 
-  constexpr const char* PATHS[] = {
-    "../../../res/player.png",     "../../../res/red-dot.png",
-    "../../../res/green-dot.png",  "../../../res/blue-dot.png",
-    "../../../res/enemy-ship.png", "../../../res/explosion-pack.png"
-  };
+  constexpr const char* PATHS[] = { "../../../res/texture/player.png",
+                                    "../../../res/texture/red-dot.png",
+                                    "../../../res/texture/green-dot.png",
+                                    "../../../res/texture/blue-dot.png",
+                                    "../../../res/texture/enemy-ship.png",
+                                    "../../../res/texture/explosion-pack.png",
+                                    "../../../res/texture/basic-enemy.png" };
 
   constexpr const char* getPath(unsigned int id) {
     return PATHS[id];

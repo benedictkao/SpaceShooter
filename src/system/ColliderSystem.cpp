@@ -65,7 +65,6 @@ void ColliderSystem::handleDeadEntity(const ColliderPair& pair,
     a.width            = params.width;
     a.height           = params.height;
     a.currFrame        = 0;
-    transform.speed    = { 0, 0 };
     _em.addEntity().add<TransformComponent>(transform).add<AnimationComponent>(
       a);
   }

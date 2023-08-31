@@ -6,10 +6,16 @@ KeyboardManager::KeyboardManager(PlayerController& controller,
 
 void KeyboardManager::handleKeydownEvent(const SDL2::Event& event) {
   auto status = _lvlManager.getStatus();
-  if (status == GameStatus::NONE)
-    handleLoadScreenKeydownEvent(event);
-  else if (status == GameStatus::ONGOING)
-    handleInGameKeydownEvent(event);
+  switch (status) {
+    case GameStatus::WIN:
+    case GameStatus::LOSE:
+    case GameStatus::NONE:
+      handleLoadScreenKeydownEvent(event);
+      break;
+    case GameStatus::ONGOING:
+      handleInGameKeydownEvent(event);
+      break;
+  }
 }
 
 void KeyboardManager::handleKeyupEvent(const SDL2::Event& event) {

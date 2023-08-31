@@ -18,7 +18,7 @@ target_link_libraries(sdl INTERFACE SDL2::SDL2main) # SDL2main runs SDL2 main fu
 add_library(components STATIC)
 target_sources(components PRIVATE
     "src/component/Vector2D.cpp"
-    "src/component/TransformComponent.cpp"
+    
 )
 target_include_directories(components INTERFACE "${PROJECT_SOURCE_DIR}/src/component")
 
@@ -28,6 +28,7 @@ target_sources(systems PRIVATE
     "src/system/PositionSystem.cpp"
     "src/system/GunSystem.cpp"
     "src/system/ColliderSystem.cpp"
+    "src/system/SystemManager.cpp"
 )
 target_link_libraries(systems PRIVATE sdl components)
 target_include_directories(systems PRIVATE "${PROJECT_SOURCE_DIR}/src")
@@ -41,7 +42,6 @@ add_executable(main
     "src/PlayerController.cpp" 
     "src/KeyboardManager.cpp" 
     "src/TextureRepo.cpp"
-    "src/SystemManager.cpp"
     "src/LevelManager.cpp"
     "src/TextRenderer.cpp"
 )

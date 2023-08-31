@@ -48,6 +48,10 @@ bool EntityManager::isScheduledForRemoval(int entity) const {
   return _deadEntities.count(entity) > 0;
 }
 
+bool EntityManager::isActive(int entity) const {
+  return _activeEntities.count(entity) > 0;
+}
+
 void EntityManager::removeEntity(int id) {
   _activeEntities.erase(id);
   _freeStore.push(id);
@@ -74,6 +78,12 @@ void EntityManager::removeDeadEntities() {
   for (int entity : _deadEntities)
     removeEntity(entity);
   _deadEntities.clear();
+}
+
+void EntityManager::reset() {
+  for (int entity : _activeEntities)
+    scheduleRemoval(entity);
+  removeDeadEntities();
 }
 
 const EntityManager::EntitySet& EntityManager::getActive() {

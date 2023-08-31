@@ -20,7 +20,8 @@ void SystemManager::init(SDL2::Renderer renderer) {
 
 void SystemManager::update() {
   _positionSystem.updatePositions();
-  _levelManager.updateStatus();
+  if (_levelManager.getStatus() == GameStatus::ONGOING)
+    _pControl.keepWithinWindow();
 
   _colliderSystem.calculateCollisions();
   _gunSystem.spawnProjectiles();
@@ -28,5 +29,6 @@ void SystemManager::update() {
   _textureSystem.updateSprites();
   _textureSystem.updateAnimations();
 
+  _levelManager.updateStatus();
   _em.removeDeadEntities();
 }
