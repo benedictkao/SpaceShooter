@@ -56,10 +56,8 @@ void EnemyManager::spawnEnemy(int spawnerId) {
     _activeEnemies.insert(enemyId);
 
     spawner.currCoolDown = spawner.coolDown;
-    if (spawner.spawnCount == 0)
+    if (--spawner.spawnCount <= 0)
       _em.scheduleRemoval(spawnerId);
-    else
-      --spawner.spawnCount;
   }
 }
 

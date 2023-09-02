@@ -44,6 +44,7 @@ add_executable(main
     "src/TextureRepo.cpp"
     "src/LevelManager.cpp"
     "src/TextRenderer.cpp"
+    "src/BackgroundManager.cpp"
 )
 target_link_libraries(main
     sdl

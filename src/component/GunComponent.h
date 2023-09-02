@@ -22,9 +22,9 @@ struct GunComponent {
 };
 
 namespace AmmoTypes {
-  constexpr Ammo PLAYER_DEFAULT = { TextureId::BLUE_BULLET, 12, 12, 8, 8, 1 };
+  constexpr Ammo PLAYER_DEFAULT = { TextureId::BLUE_BULLET, 12, 12, 10, 14, 1 };
 
-  constexpr Ammo ENEMY_DEFAULT = { TextureId::RED_BULLET, 60, 12, 8, 8, 1 };
+  constexpr Ammo ENEMY_DEFAULT = { TextureId::RED_BULLET, 60, 12, 12, 12, 1 };
 
   constexpr Ammo ENEMY_BOSS = { TextureId::RED_BULLET, 60, 8, 16, 16, 3 };
 } // namespace AmmoTypes

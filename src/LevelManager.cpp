@@ -1,7 +1,7 @@
 #include "LevelManager.h"
 #include "Constants.h"
 
-static constexpr auto LOSS_DELAY_FRAMES{ 20 };
+static constexpr auto RESULT_DELAY_FRAMES{ 20 };
 
 LevelManager::LevelManager(EntityManager&    em,
                            PlayerController& pControl,
@@ -13,30 +13,54 @@ LevelManager::LevelManager(EntityManager&    em,
     , _textRenderer(textRenderer)
     , _enemyManager(em, texRepo)
     , _currentStatus(GameStatus::NONE)
-    , _lossCountdown(0) {
+    , _countdown(0) {
 
   // TODO: optimize this!
-  Phase   phase1;
+  Phase phase;
 
-  Spawner spawner1;
-  spawner1.settings.push_back({ 40, 80, 4, 200 });
-  spawner1.details = { TextureId::BASIC_ENEMY, 48, 48, 1, { 0, 4 } };
-  Spawner spawner2;
-  spawner2.settings.push_back({ 40, 80, 4, 400 });
-  spawner2.details = { TextureId::BASIC_ENEMY, 48, 48, 1, { 0, 4 } };
+  Spawner spawner;
+  spawner.settings.push_back({ 40, 60, 3, 100 });
+  spawner.settings.push_back({ 40, 60, 3, 200 });
+  spawner.settings.push_back({ 40, 60, 3, 300 });
+  spawner.settings.push_back({ 40, 60, 3, 400 });
+  spawner.settings.push_back({ 40, 60, 3, 500 });
+  spawner.settings.push_back({ 40, 60, 3, 600 });
+  spawner.settings.push_back({ 40, 60, 3, 700 });
+  spawner.details = { TextureId::BASIC_ENEMY, 42, 42, 1, { 0, 3 } };
 
-  phase1.spawners.push_back(spawner1);
-  phase1.spawners.push_back(spawner2);
-  _currentLevel.phases.push_back(phase1);
+  phase.spawners.push_back(spawner);
+
+  _currentLevel.phases.push_back(phase);
+
+  auto it  = phase.spawners[0].settings.begin();
+  auto end = phase.spawners[0].settings.end();
+  while (it != end) {
+    it->startingCooldown += 200;
+    it->coolDown = 80;
+    ++it;
+    if (it != end) {
+      it->startingCooldown += 240;
+      it->coolDown = 80;
+      ++it;
+    }
+  }
+  _currentLevel.phases.push_back(phase);
+
+  phase.spawners.clear();
+  spawner.settings.clear();
+  spawner.settings.push_back({ 300, 0, 1, 360 });
+  spawner.details = { TextureId::BOSS_ENEMY, 80, 80, 20, { 0, 1 } };
+  phase.spawners.push_back(spawner);
+  _currentLevel.phases.push_back(phase);
 }
 
 void LevelManager::initLevel() {
   reset();
 
   // pre-load common textures
-  _texRepo.loadTexture(TextureId::RED_BULLET);
+  _texRepo.loadTexture(TextureId::BOSS_ENEMY);
   _texRepo.loadTexture(TextureId::GREEN_SHIP);
-  _texRepo.loadTexture(TextureId::BLUE_BULLET);
+  _texRepo.loadTexture(TextureId::YELLOW_BULLET);
   _texRepo.loadTexture(TextureId::BASIC_ENEMY);
   _texRepo.loadTexture(TextureId::EXPLOSION);
 
@@ -57,22 +81,25 @@ GameStatus LevelManager::updateStatus() {
   switch (_currentStatus) {
     case GameStatus::NONE:
       _textRenderer.showCenterText(Constants::GAME_NAME,
-                                   "Press space to start");
+                                   "Press enter to start");
       break;
     case GameStatus::ONGOING:
       if (_pControl.checkPlayerDead())
-        setLoseStatus();
+        setResult(GameStatus::LOSE);
       else
         updateLevel();
       break;
     case GameStatus::LOSE:
-      if (_lossCountdown == 0)
-        _textRenderer.showCenterText("Game Over", "Press space to play again");
+      if (_countdown == 0)
+        _textRenderer.showCenterText("Game Over", "Press enter to play again");
       else
-        --_lossCountdown;
+        --_countdown;
       break;
     case GameStatus::WIN:
-      _textRenderer.showCenterText("You Win!", "Press space to play again");
+      if (_countdown == 0)
+        _textRenderer.showCenterText("You Win!", "Press enter to play again");
+      else
+        --_countdown;
       break;
   }
   return _currentStatus;
@@ -82,9 +109,9 @@ GameStatus LevelManager::getStatus() const {
   return _currentStatus;
 }
 
-void LevelManager::setLoseStatus() {
-  _lossCountdown = LOSS_DELAY_FRAMES;
-  _currentStatus = GameStatus::LOSE;
+void LevelManager::setResult(GameStatus status) {
+  _countdown     = RESULT_DELAY_FRAMES;
+  _currentStatus = status;
 }
 
 void LevelManager::updateLevel() {
@@ -103,7 +130,7 @@ void LevelManager::updateLevel() {
     if (_currentLevel.currentPhase < _currentLevel.phases.size() - 1) {
       initNextPhase();
     } else if (_enemyManager.allEnemiesDead()) {
-      _currentStatus = GameStatus::WIN;
+      setResult(GameStatus::WIN);
       _pControl.stopMovingPlayer();
       _pControl.stopShootingGun();
     }

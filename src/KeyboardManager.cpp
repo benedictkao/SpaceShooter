@@ -44,7 +44,7 @@ void KeyboardManager::handleKeyupEvent(const SDL2::Event& event) {
 }
 
 void KeyboardManager::handleLoadScreenKeydownEvent(const SDL2::Event& event) {
-  if (event.key.keysym.sym == SDLK_SPACE)
+  if (event.key.keysym.sym == SDLK_RETURN)
     _lvlManager.initLevel();
 }
 

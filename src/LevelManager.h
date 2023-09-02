@@ -19,7 +19,7 @@ private:
   TextRenderer&     _textRenderer;
   EnemyManager      _enemyManager;
   GameStatus        _currentStatus;
-  unsigned int      _lossCountdown;
+  unsigned int      _countdown;
   Level             _currentLevel;
 
 public:
@@ -31,7 +31,7 @@ public:
   GameStatus getStatus() const;
 
 private:
-  void setLoseStatus();
+  void setResult(GameStatus);
   void updateLevel();
   void initNextPhase();
 };

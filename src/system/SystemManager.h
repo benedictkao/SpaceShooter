@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BackgroundManager.h"
 #include "EnemyManager.h"
 #include "EntityManager.h"
 #include "LevelManager.h"
@@ -17,9 +18,14 @@ private:
   GunSystem         _gunSystem;
   PlayerController& _pControl;
   LevelManager&     _levelManager;
+  BackgroundManager _bgManager;
 
 public:
-  SystemManager(EntityManager&, TextureRepo&, PlayerController&, TextRenderer&, LevelManager&);
+  SystemManager(EntityManager&,
+                TextureRepo&,
+                PlayerController&,
+                TextRenderer&,
+                LevelManager&);
 
   void init(SDL2::Renderer);
   void update();

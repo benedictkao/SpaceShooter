@@ -7,7 +7,7 @@ static constexpr auto ANIMATION_WIDTH{ 4 };
 static constexpr auto ANIMATION_HEIGHT{ 4 };
 static constexpr auto ANIMATION_FRAMES{ 16 };
 
-TextureSystem::TextureSystem(EntityManager& em) : _em(em) {}
+TextureSystem::TextureSystem(EntityManager& em) : _em(em), _renderer(0) {}
 
 void TextureSystem::setRenderer(SDL2::Renderer renderer) {
   _renderer = renderer;

@@ -13,7 +13,7 @@ SDL2::Texture TextureRepo::loadTexture(unsigned int id) {
     _textureMap[id]   = tex;
     return tex;
   } else {
-    std::cout << "Texture " << path << " loaded from cache" << std::endl;
+    //std::cout << "Texture " << path << " loaded from cache" << std::endl;
     return it->second;
   }
 }

@@ -22,5 +22,5 @@ struct Phase {
 
 struct Level {
   std::vector<Phase> phases;
-  unsigned int       currentPhase;
+  int                currentPhase;
 };

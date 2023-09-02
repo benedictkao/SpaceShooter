@@ -3,7 +3,7 @@
 #include "Constants.h"
 
 static constexpr int  PLAYER_SPEED{ 8 };
-static constexpr int  PLAYER_HP{ 5 };
+static constexpr int  PLAYER_HP{ 3 };
 static constexpr auto PLAYER_SPRITE_PATH{ "../../../res/player.png" };
 
 PlayerController::PlayerController(EntityManager& em, TextureRepo& textureRepo)

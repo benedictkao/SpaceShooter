@@ -12,13 +12,17 @@ SystemManager::SystemManager(EntityManager&    em,
     , _colliderSystem(em, texRepo)
     , _gunSystem(em, texRepo)
     , _pControl(pControl)
-    , _levelManager(levelManager) {}
+    , _levelManager(levelManager)
+    , _bgManager(texRepo) {}
 
 void SystemManager::init(SDL2::Renderer renderer) {
   _textureSystem.setRenderer(renderer);
+  _bgManager.setRenderer(renderer);
 }
 
 void SystemManager::update() {
+  _bgManager.updateBackground();
+
   _positionSystem.updatePositions();
   if (_levelManager.getStatus() == GameStatus::ONGOING)
     _pControl.keepWithinWindow();
