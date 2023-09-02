@@ -11,5 +11,7 @@ public:
   void updatePositions();
 
 private:
-  void updatePosition(const SpeedComponent&, TransformComponent&);
+  void     updatePath(int entity, SpeedComponent&, const TransformComponent&);
+  void     updatePosition(const SpeedComponent&, TransformComponent&);
+  Vector2D calculateDirection(const Point& current, const Point& target);
 };

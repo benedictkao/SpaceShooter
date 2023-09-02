@@ -3,6 +3,7 @@
 #include "AnimationComponent.h"
 #include "ColliderComponent.h"
 #include "GunComponent.h"
+#include "PathComponent.h"
 #include "SpawnComponent.h"
 #include "SpeedComponent.h"
 #include "SpriteComponent.h"

@@ -9,7 +9,7 @@ void TextRenderer::showCenterText(const char* title, const char* subtitle) {
     return;
 
   SDL2::TextureData tData = _texRepo.loadText(title, 48);
-  int               x     = (Constants::WINDOW_WIDTH - tData.width) / 2;
+  int               x     = Constants::WINDOW_WIDTH / 2;
   int               y     = Constants::WINDOW_HEIGHT / 3;
 
   TransformComponent t;
@@ -23,7 +23,7 @@ void TextRenderer::showCenterText(const char* title, const char* subtitle) {
   if (subtitle) {
     SDL2::TextureData subData = _texRepo.loadText(subtitle, 24);
 
-    x = (Constants::WINDOW_WIDTH - subData.width) / 2;
+    x = Constants::WINDOW_WIDTH / 2;
     y += tData.height + 20;
     t.position = { x, y };
     t.height   = subData.height;

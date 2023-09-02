@@ -15,7 +15,7 @@ void PlayerController::addPlayer(int x, int y) {
                 .add<TransformComponent>(createTransform(x, y))
                 .add<GunComponent>(createGun())
                 .add<ColliderComponent>(createCollider())
-                .add<SpeedComponent>({ 0, 0 })
+                .add<SpeedComponent>({ { 0, 0 }, PLAYER_SPEED })
                 .id();
 }
 
@@ -30,12 +30,14 @@ int PlayerController::getPlayerId() const {
 void PlayerController::keepWithinWindow() {
   TransformComponent& transform =
     _em.getComponent<TransformComponent>(_playerId);
+  int halfWidth  = transform.width / 2;
+  int halfHeight = transform.height / 2;
   coerceBetween(transform.position.x,
-                0,
-                Constants::WINDOW_WIDTH - transform.width);
+                0 + halfWidth,
+                Constants::WINDOW_WIDTH - halfWidth);
   coerceBetween(transform.position.y,
-                0,
-                Constants::WINDOW_HEIGHT - transform.height);
+                0 + halfHeight,
+                Constants::WINDOW_HEIGHT - halfHeight);
 }
 
 bool PlayerController::checkPlayerDead() {
@@ -54,9 +56,10 @@ SpriteComponent PlayerController::createSprite() const {
 
 TransformComponent PlayerController::createTransform(int x, int y) {
   TransformComponent transform;
-  transform.position = { x, y };
-  transform.height   = 32;
-  transform.width    = 32;
+  transform.position.x = x;
+  transform.position.y = y;
+  transform.height     = 32;
+  transform.width      = 32;
   return transform;
 }
 
@@ -78,39 +81,39 @@ ColliderComponent PlayerController::createCollider() {
 }
 
 void PlayerController::movePlayerUp() {
-  _em.getComponent<SpeedComponent>(_playerId).y = -PLAYER_SPEED;
+  _em.getComponent<SpeedComponent>(_playerId).direction.y = -1;
 }
 
 void PlayerController::movePlayerDown() {
-  _em.getComponent<SpeedComponent>(_playerId).y = PLAYER_SPEED;
+  _em.getComponent<SpeedComponent>(_playerId).direction.y = 1;
 }
 
 void PlayerController::movePlayerLeft() {
-  _em.getComponent<SpeedComponent>(_playerId).x = -PLAYER_SPEED;
+  _em.getComponent<SpeedComponent>(_playerId).direction.x = -1;
 }
 
 void PlayerController::movePlayerRight() {
-  _em.getComponent<SpeedComponent>(_playerId).x = PLAYER_SPEED;
+  _em.getComponent<SpeedComponent>(_playerId).direction.x = 1;
 }
 
 void PlayerController::stopMovingPlayer() {
-  _em.getComponent<SpeedComponent>(_playerId) = { 0, 0 };
+  _em.getComponent<SpeedComponent>(_playerId).direction = { 0, 0 };
 }
 
 void PlayerController::stopMovingPlayerUp() {
-  coercePositive(_em.getComponent<SpeedComponent>(_playerId).y);
+  coercePositive(_em.getComponent<SpeedComponent>(_playerId).direction.y);
 }
 
 void PlayerController::stopMovingPlayerDown() {
-  coerceNegative(_em.getComponent<SpeedComponent>(_playerId).y);
+  coerceNegative(_em.getComponent<SpeedComponent>(_playerId).direction.y);
 }
 
 void PlayerController::stopMovingPlayerLeft() {
-  coercePositive(_em.getComponent<SpeedComponent>(_playerId).x);
+  coercePositive(_em.getComponent<SpeedComponent>(_playerId).direction.x);
 }
 
 void PlayerController::stopMovingPlayerRight() {
-  coerceNegative(_em.getComponent<SpeedComponent>(_playerId).x);
+  coerceNegative(_em.getComponent<SpeedComponent>(_playerId).direction.x);
 }
 
 void PlayerController::shootGun() {

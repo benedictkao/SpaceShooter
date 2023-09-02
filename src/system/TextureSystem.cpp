@@ -28,8 +28,8 @@ void TextureSystem::updateAnimations() {
       if (++animation.currFrame == ANIMATION_FRAMES)
         _em.scheduleRemoval(i);
 
-      SDL2::Rect dest = { transform.position.x,
-                          transform.position.y,
+      SDL2::Rect dest = { transform.position.x - transform.width / 2,
+                          transform.position.y - transform.height / 2,
                           transform.width,
                           transform.height };
       SDL2::blit(animation.tex, _renderer, src, dest);
@@ -47,8 +47,8 @@ void TextureSystem::updateSprites() {
 void TextureSystem::updateSprite(int entity) {
   SDL2::Texture       tex = _em.getComponent<SpriteComponent>(entity).texture;
   TransformComponent& transform = _em.getComponent<TransformComponent>(entity);
-  SDL2::Rect          dest      = { transform.position.x,
-                                    transform.position.y,
+  SDL2::Rect          dest      = { transform.position.x - transform.width / 2,
+                                    transform.position.y - transform.height / 2,
                                     transform.width,
                                     transform.height };
   SDL2::blit(tex, _renderer, dest);

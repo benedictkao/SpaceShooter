@@ -2,6 +2,7 @@
 
 #include "EntityManager.h"
 #include "TextureRepo.h"
+#include "Vector2D.h"
 #include <unordered_set>
 
 class EnemyManager {
@@ -14,8 +15,11 @@ private:
 
 public:
   EnemyManager(EntityManager&, TextureRepo&);
-  void addSimpleEnemy();
   void spawnEnemy(int spawnerId);
   void updateActiveEnemies();
   bool allEnemiesDead() const;
+
+private:
+  void spawnBasic(const Point&);
+  void spawnBoss(const Point&);
 };

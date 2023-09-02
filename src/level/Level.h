@@ -13,7 +13,7 @@ struct SingleSpawnSettings {
 
 struct Spawner {
   std::vector<SingleSpawnSettings> settings;
-  SpawnDetails                     details;
+  EnemyType                        type;
 };
 
 struct Phase {

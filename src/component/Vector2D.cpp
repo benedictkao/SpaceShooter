@@ -1,6 +1,15 @@
 #include "Vector2D.h"
 
-Vector2D Vector2D::operator*(int multiplier) const {
+Point Point::operator-(const Point& rhs) const {
+  Point p = { x - rhs.x, y - rhs.y };
+  return p;
+}
+
+bool Point::operator==(const Point& rhs) const noexcept {
+  return x == rhs.x && y == rhs.y;
+}
+
+Vector2D Vector2D::operator*(float multiplier) const {
   Vector2D result;
   result.x = x * multiplier;
   result.y = y * multiplier;

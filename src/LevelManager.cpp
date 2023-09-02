@@ -26,10 +26,8 @@ LevelManager::LevelManager(EntityManager&    em,
   spawner.settings.push_back({ 40, 60, 3, 500 });
   spawner.settings.push_back({ 40, 60, 3, 600 });
   spawner.settings.push_back({ 40, 60, 3, 700 });
-  spawner.details = { TextureId::BASIC_ENEMY, 42, 42, 1, { 0, 3 } };
-
+  spawner.type = EnemyType::BASIC;
   phase.spawners.push_back(spawner);
-
   _currentLevel.phases.push_back(phase);
 
   auto it  = phase.spawners[0].settings.begin();
@@ -48,8 +46,8 @@ LevelManager::LevelManager(EntityManager&    em,
 
   phase.spawners.clear();
   spawner.settings.clear();
-  spawner.settings.push_back({ 300, 0, 1, 360 });
-  spawner.details = { TextureId::BOSS_ENEMY, 80, 80, 20, { 0, 1 } };
+  spawner.settings.push_back({ 300, 0, 1, 400 });
+  spawner.type = EnemyType::BOSS;
   phase.spawners.push_back(spawner);
   _currentLevel.phases.push_back(phase);
 }
@@ -59,12 +57,13 @@ void LevelManager::initLevel() {
 
   // pre-load common textures
   _texRepo.loadTexture(TextureId::BOSS_ENEMY);
+  _texRepo.loadTexture(TextureId::RED_BULLET);
   _texRepo.loadTexture(TextureId::GREEN_SHIP);
   _texRepo.loadTexture(TextureId::YELLOW_BULLET);
   _texRepo.loadTexture(TextureId::BASIC_ENEMY);
   _texRepo.loadTexture(TextureId::EXPLOSION);
 
-  _pControl.addPlayer(384, 500);
+  _pControl.addPlayer(400, 500);
   _currentLevel.currentPhase = -1;
   initNextPhase();
   _currentStatus = GameStatus::ONGOING;
@@ -147,11 +146,12 @@ void LevelManager::initNextPhase() {
       spawnComponent.currCoolDown = setting.startingCooldown;
       spawnComponent.coolDown     = setting.coolDown;
       spawnComponent.spawnCount   = setting.spawnCount;
-      spawnComponent.details      = &spawner.details;
+      spawnComponent.type         = spawner.type;
       TransformComponent t;
-      t.position = { setting.x, 0 };
-      t.height   = 0;
-      t.width    = 0;
+      t.position.x = setting.x;
+      t.position.y = 0;
+      t.height     = 0;
+      t.width      = 0;
       _em.addEntity()
         .add<SpawnComponent>(spawnComponent)
         .add<TransformComponent>(t);

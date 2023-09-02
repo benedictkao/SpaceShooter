@@ -30,13 +30,15 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   sprite.texture = _textureRepo.loadTexture(gun.ammo.assetId);
 
   TransformComponent transform;
-  transform.height     = gun.ammo.height;
-  transform.width      = gun.ammo.width;
-  transform.position.x = parent.centerX() - transform.width / 2;
-  int offsetY          = gun.direction == Direction::DOWN ? parent.height : 0;
-  transform.position.y = parent.position.y + offsetY;
+  transform.height = gun.ammo.height;
+  transform.width  = gun.ammo.width;
+  transform.position.x      = parent.position.x;
+  int sign         = gun.direction == Direction::DOWN ? 1 : -1;
+  transform.position.y      = parent.position.y + sign * parent.height / 2;
 
-  SpeedComponent speed = static_cast<SpeedComponent>(gun.direction * gun.ammo.speed);
+  SpeedComponent speed;
+  speed.direction = gun.direction;
+  speed.speed     = gun.ammo.speed;
 
   ColliderComponent collider;
   collider.health    = gun.ammo.damage;

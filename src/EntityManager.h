@@ -34,6 +34,7 @@ public:
                      ColliderComponent,
                      AnimationComponent,
                      SpawnComponent,
+                     PathComponent,
                      SpeedComponent>
                                   ComponentArrays;
   typedef std::stack<int>         EntityStack;
@@ -49,6 +50,13 @@ public:
 
     template <typename T>
     EntityInitializer& add(const T& component) {
+      _em.addComponents(_entity, T::FLAG);
+      _em.getComponent<T>(_entity) = component;
+      return *this;
+    }
+
+    template <typename T>
+    EntityInitializer& add(T&& component) {
       _em.addComponents(_entity, T::FLAG);
       _em.getComponent<T>(_entity) = component;
       return *this;

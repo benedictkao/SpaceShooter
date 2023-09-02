@@ -11,7 +11,7 @@ namespace TextureId {
   constexpr unsigned int BACKGROUND    = 7;
 
   constexpr const char* PATHS[] = { "../../../res/texture/player.png",
-                                    "../../../res/texture/red-beam.png",
+                                    "../../../res/texture/red-fireball.png",
                                     "../../../res/texture/yellow-fireball.png",
                                     "../../../res/texture/blue-fireball.png",
                                     "../../../res/texture/enemy-ship.png",

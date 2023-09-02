@@ -1,12 +1,20 @@
 #pragma once
 
-struct Vector2D {
+struct Point {
   int x;
   int y;
 
-  Vector2D operator*(int) const;
-  bool operator==(const Vector2D&) const noexcept;
-};	
+  Point operator-(const Point&) const;
+  bool operator==(const Point&) const noexcept;
+};
+
+struct Vector2D {
+  float x;
+  float y;
+
+  Vector2D operator*(float) const;
+  bool     operator==(const Vector2D&) const noexcept;
+};
 
 namespace Direction {
   constexpr Vector2D UP{ 0, -1 };

@@ -18,7 +18,7 @@ target_link_libraries(sdl INTERFACE SDL2::SDL2main) # SDL2main runs SDL2 main fu
 add_library(components STATIC)
 target_sources(components PRIVATE
     "src/component/Vector2D.cpp"
-    
+    "src/component/PathComponent.cpp"
 )
 target_include_directories(components INTERFACE "${PROJECT_SOURCE_DIR}/src/component")
 

@@ -3,19 +3,15 @@
 #include "ComponentFlag.h"
 #include "Vector2D.h"
 
-struct SpawnDetails {
-  unsigned int texId;
-  unsigned int height;
-  unsigned int width;
-  unsigned int hp;
-  Vector2D     speed;
+enum EnemyType {
+	BASIC, BOSS
 };
 
 struct SpawnComponent {
   int                 currCoolDown;
   int                 coolDown;
   int                 spawnCount;
-  const SpawnDetails* details;
+  EnemyType           type;
 
   static constexpr ComponentFlag FLAG{ ComponentFlag::SPAWN };
 };

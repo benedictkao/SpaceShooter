@@ -7,8 +7,8 @@ ColliderSystem::ColliderSystem(EntityManager& em, TextureRepo& texRepo)
     : _em(em), _texRepo(texRepo) {}
 
 static inline SDL2::Rect toRect(const TransformComponent& transform) {
-  return { transform.position.x,
-           transform.position.y,
+  return { transform.position.x - transform.width / 2,
+           transform.position.y - transform.height / 2,
            transform.width,
            transform.height };
 }
