@@ -2,6 +2,7 @@
 
 #include "EnemyManager.h"
 #include "EntityManager.h"
+#include "MusicManager.h"
 #include "PlayerController.h"
 #include "TextRenderer.h"
 #include "TextureRepo.h"
@@ -17,13 +18,18 @@ private:
   PlayerController& _pControl;
   TextureRepo&      _texRepo;
   TextRenderer&     _textRenderer;
+  MusicManager&     _musicManager;
   EnemyManager      _enemyManager;
   GameStatus        _currentStatus;
   unsigned int      _countdown;
   Level             _currentLevel;
 
 public:
-  LevelManager(EntityManager&, PlayerController&, TextureRepo&, TextRenderer&);
+  LevelManager(EntityManager&,
+               PlayerController&,
+               TextureRepo&,
+               TextRenderer&,
+               MusicManager&);
 
   void       initLevel();
   void       reset();
@@ -32,6 +38,7 @@ public:
 
 private:
   void setResult(GameStatus);
+  void displayResult(const char* title, const char* subtitle, unsigned int soundId);
   void updateLevel();
   void initNextPhase();
 };

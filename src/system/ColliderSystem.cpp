@@ -1,10 +1,13 @@
 #include "ColliderSystem.h"
+#include "ResId.h"
 #include "SDLWrapper.h"
 #include <iostream>
 #include <vector>
 
-ColliderSystem::ColliderSystem(EntityManager& em, TextureRepo& texRepo)
-    : _em(em), _texRepo(texRepo) {}
+ColliderSystem::ColliderSystem(EntityManager& em,
+                               TextureRepo&   texRepo,
+                               MusicManager&  musicManager)
+    : _em(em), _texRepo(texRepo), _musicManager(musicManager) {}
 
 static inline SDL2::Rect toRect(const TransformComponent& transform) {
   return { transform.position.x - transform.width / 2,
@@ -65,6 +68,7 @@ void ColliderSystem::handleDeadEntity(const ColliderPair& pair,
     a.width            = params.width;
     a.height           = params.height;
     a.currFrame        = 0;
+    _musicManager.playSound(params.soundId);
     _em.addEntity().add<TransformComponent>(transform).add<AnimationComponent>(
       a);
   }

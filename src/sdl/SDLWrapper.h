@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SDL.h>
+#include <SDL_mixer.h>
 
 namespace SDL2 {
 
@@ -9,6 +10,9 @@ namespace SDL2 {
   typedef SDL_Texture*  Texture;
   typedef SDL_Event     Event;
   typedef SDL_Rect      Rect;
+
+  typedef Mix_Music* Music;
+  typedef Mix_Chunk* Sound;
 
   struct TextureData {
     Texture tex;
@@ -36,15 +40,37 @@ namespace SDL2 {
 
   void destroyTexture(Texture);
 
+  void freeMusic(Music);
+
+  void freeSound(Sound);
+
   bool hasIntersect(const Rect&, const Rect&);
 
   void prepareScene(Renderer, Uint8 r, Uint8 g, Uint8 b, Uint8 a);
 
   void presentScene(Renderer);
 
+  Music loadMusic(const char*);
+
+  Sound loadSound(const char*);
+
+  void playMusic(Music);
+
+  void playSound(Sound);
+
+  void stopMusic();
+
+  void stopSounds();
+
+  int setMusicVolume(int);
+
+  int setSoundVolume(Sound, int);
+
+  int setSoundVolume(int);
+
   Uint64 elapsedTimeInMillis();
 
   void delay(Uint32);
 
-  void close(Window);
+  void close(Window, Renderer);
 } // namespace SDL2

@@ -1,10 +1,11 @@
 #pragma once
 #include "ComponentFlag.h"
-#include "TextureId.h"
+#include "ResId.h"
 #include "Vector2D.h"
 
 struct Ammo {
   unsigned int assetId;
+  int          soundId;
   int          coolDown;
   int          speed;
   int          width;
@@ -22,9 +23,7 @@ struct GunComponent {
 };
 
 namespace AmmoTypes {
-  constexpr Ammo PLAYER_DEFAULT = { TextureId::BLUE_BULLET, 12, 12, 10, 14, 1 };
+  constexpr Ammo PLAYER_DEFAULT = { TextureId::BLUE_BULLET, SoundId::SMALL_SHOT, 12, 12, 10, 14, 1 };
 
-  constexpr Ammo ENEMY_DEFAULT = { TextureId::RED_BULLET, 60, 12, 12, 12, 1 };
-
-  constexpr Ammo ENEMY_BOSS = { TextureId::RED_BULLET, 50, 8, 20, 40, 3 };
+  constexpr Ammo ENEMY_BOSS = { TextureId::RED_BULLET, SoundId::FIREBALL, 50, 8, 20, 40, 3 };
 } // namespace AmmoTypes

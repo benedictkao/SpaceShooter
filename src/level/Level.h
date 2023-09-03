@@ -2,7 +2,6 @@
 
 #include "SpawnComponent.h"
 #include "Vector2D.h"
-#include <queue>
 
 struct SingleSpawnSettings {
   int startingCooldown;

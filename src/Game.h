@@ -3,7 +3,7 @@
 #include "EnemyManager.h"
 #include "EntityManager.h"
 #include "KeyboardManager.h"
-#include "LevelManager.h"
+#include "MusicManager.h"
 #include "PlayerController.h"
 #include "SDLWrapper.h"
 #include "SystemManager.h"
@@ -14,6 +14,7 @@ class Game {
 private:
   EntityManager    _em;
   TextureRepo      _texRepo;
+  MusicManager     _musicManager;
   PlayerController _playerController;
   TextRenderer     _textRenderer;
   LevelManager     _levelManager;

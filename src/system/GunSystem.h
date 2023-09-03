@@ -1,15 +1,17 @@
 #pragma once
 
 #include "EntityManager.h"
+#include "MusicManager.h"
 #include "TextureRepo.h"
 
 class GunSystem {
 private:
   EntityManager& _em;
   TextureRepo&   _textureRepo;
+  MusicManager&  _musicManager;
 
 public:
-  GunSystem(EntityManager&, TextureRepo&);
+  GunSystem(EntityManager&, TextureRepo&, MusicManager&);
   void spawnProjectiles();
 
 private:

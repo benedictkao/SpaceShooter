@@ -4,6 +4,7 @@
 #include "EnemyManager.h"
 #include "EntityManager.h"
 #include "LevelManager.h"
+#include "MusicManager.h"
 #include "PlayerController.h"
 #include "SDLWrapper.h"
 #include "Systems.h"
@@ -18,6 +19,7 @@ private:
   GunSystem         _gunSystem;
   PlayerController& _pControl;
   LevelManager&     _levelManager;
+  MusicManager&     _musicManager;
   BackgroundManager _bgManager;
 
 public:
@@ -25,7 +27,8 @@ public:
                 TextureRepo&,
                 PlayerController&,
                 TextRenderer&,
-                LevelManager&);
+                LevelManager&,
+                MusicManager&);
 
   void init(SDL2::Renderer);
   void update();

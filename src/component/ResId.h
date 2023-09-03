@@ -24,17 +24,46 @@ namespace TextureId {
   }
 } // namespace TextureId
 
+namespace MusicId {
+  constexpr auto LOAD{ 0 };
+} // namespace MusicId
+
+namespace SoundId {
+  constexpr auto NONE{ -1 };
+  constexpr auto START{ 0 };
+  constexpr auto EXPLODE{ 1 };
+  constexpr auto SMALL_SHOT{ 2 };
+  constexpr auto FIREBALL{ 3 };
+  constexpr auto PLAYER_DAMAGE{ 4 };
+  constexpr auto VICTORY{ 5 };
+  constexpr auto FAIL{ 6 };
+
+  constexpr const char* PATHS[] = {
+    "../../../res/audio/game-start.mp3",    "../../../res/audio/explode.wav",
+    "../../../res/audio/pew.wav",           "../../../res/audio/shoot-fire.mp3",
+    "../../../res/audio/player-damage.mp3", "../../../res/audio/victory.mp3",
+    "../../../res/audio/fail.mp3"
+  };
+
+  constexpr const char* getPath(unsigned int id) {
+    return PATHS[id];
+  }
+} // namespace SoundId
+
 const struct AnimationParams {
   unsigned int texId;
   unsigned int width;
   unsigned int height;
+  int          soundId;
 };
 
 namespace AnimationId {
   constexpr int NONE              = -1;
   constexpr int DEFAULT_EXPLOSION = 0;
 
-  constexpr AnimationParams PARAMS[] = { { TextureId::EXPLOSION, 32, 32 } };
+  constexpr AnimationParams PARAMS[] = {
+    { TextureId::EXPLOSION, 32, 32, SoundId::EXPLODE }
+  };
 
   constexpr AnimationParams getParams(unsigned int id) {
     return PARAMS[id];

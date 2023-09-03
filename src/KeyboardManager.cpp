@@ -1,8 +1,11 @@
 #include "KeyboardManager.h"
 
 KeyboardManager::KeyboardManager(PlayerController& controller,
-                                 LevelManager&     lvlManager)
-    : _controller(controller), _lvlManager(lvlManager) {}
+                                 LevelManager&     lvlManager,
+                                 MusicManager&     musicManager)
+    : _controller(controller)
+    , _lvlManager(lvlManager)
+    , _musicManager(musicManager) {}
 
 void KeyboardManager::handleKeydownEvent(const SDL2::Event& event) {
   auto status = _lvlManager.getStatus();
@@ -44,8 +47,12 @@ void KeyboardManager::handleKeyupEvent(const SDL2::Event& event) {
 }
 
 void KeyboardManager::handleLoadScreenKeydownEvent(const SDL2::Event& event) {
-  if (event.key.keysym.sym == SDLK_RETURN)
+  if (event.key.keysym.sym == SDLK_RETURN) {
+    _musicManager.stopPlayingMusic();
+    _musicManager.stopSounds();
+    _musicManager.playSound(SoundId::START);
     _lvlManager.initLevel();
+  }
 }
 
 void KeyboardManager::handleInGameKeydownEvent(const SDL2::Event& event) {

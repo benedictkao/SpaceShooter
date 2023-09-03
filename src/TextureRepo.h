@@ -20,5 +20,5 @@ public:
 
   SDL2::TextureData loadText(const char*, int size);
 
-  void clearCache();
+  void clear();
 };

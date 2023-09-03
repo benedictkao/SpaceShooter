@@ -1,13 +1,14 @@
 #include "SDLWrapper.h"
+#include "SDLWrapper.h"
+#include "SDLWrapper.h"
 #include "Constants.h"
 #include "SDLWrapper.h"
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 
-#include <iostream>
-
 Uint32 SDL2::init() {
-  return SDL_Init(SDL_INIT_VIDEO) + TTF_Init();
+  return SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) + TTF_Init() +
+         Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
 }
 
 SDL2::Window SDL2::createWindow(const char* title) {
@@ -28,28 +29,27 @@ Uint32 SDL2::pollEvent(SDL2::Event* event) {
 }
 
 SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
-  Texture texture;
+  Texture texture = IMG_LoadTexture(renderer, path);
 
-  SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
-                 SDL_LOG_PRIORITY_INFO,
-                 "Loaded %s",
-                 path);
-
-  texture = IMG_LoadTexture(renderer, path);
-
-  if (texture == NULL)
+  if (!texture)
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
                    SDL_LOG_PRIORITY_INFO,
                    IMG_GetError());
+  else
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+                   SDL_LOG_PRIORITY_INFO,
+                   "Loaded texture %s",
+                   path);
 
   return texture;
 }
 
-SDL2::TextureData SDL2::loadText(const char* text, int size, Renderer renderer) {
+SDL2::TextureData
+SDL2::loadText(const char* text, int size, Renderer renderer) {
   // TODO: take this as input
   SDL_Color color = { 204, 204, 0 };
   // TODO: store this somewhere?
-  TTF_Font*    font = TTF_OpenFont("../../../res/font/retro.ttf", size);
+  TTF_Font*    font        = TTF_OpenFont("../../../res/font/retro.ttf", size);
   SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, color);
 
   Texture     tex  = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -73,6 +73,14 @@ void SDL2::destroyTexture(Texture tex) {
   SDL_DestroyTexture(tex);
 }
 
+void SDL2::freeMusic(Music music) {
+  Mix_FreeMusic(music);
+}
+
+void SDL2::freeSound(Sound sound) {
+  Mix_FreeChunk(sound);
+}
+
 bool SDL2::hasIntersect(const Rect& a, const Rect& b) {
   return static_cast<bool>(SDL_HasIntersection(&a, &b));
 }
@@ -90,6 +98,62 @@ void SDL2::presentScene(SDL2::Renderer renderer) {
   SDL_RenderPresent(renderer);
 }
 
+SDL2::Music SDL2::loadMusic(const char* path) {
+  Music music = Mix_LoadMUS(path);
+  if (!music)
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+                   SDL_LOG_PRIORITY_INFO,
+                   Mix_GetError());
+  else
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+                   SDL_LOG_PRIORITY_INFO,
+                   "Loaded music %s",
+                   path);
+  return music;
+}
+
+SDL2::Sound SDL2::loadSound(const char* path) {
+  Sound sound = Mix_LoadWAV(path);
+  if (!sound)
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+                   SDL_LOG_PRIORITY_INFO,
+                   Mix_GetError());
+  else
+    SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
+                   SDL_LOG_PRIORITY_INFO,
+                   "Loaded sound %s",
+                   path);
+  return sound;
+}
+
+void SDL2::playMusic(SDL2::Music music) {
+  Mix_PlayMusic(music, -1);
+}
+
+void SDL2::playSound(SDL2::Sound sound) {
+  Mix_PlayChannel(-1, sound, 0);
+}
+
+void SDL2::stopMusic() {
+  Mix_HaltMusic();
+}
+
+void SDL2::stopSounds() {
+  Mix_HaltChannel(-1);
+}
+
+int SDL2::setMusicVolume(int volume) {
+  return Mix_VolumeMusic(volume);
+}
+
+int SDL2::setSoundVolume(Sound sound, int volume) {
+  return Mix_VolumeChunk(sound, volume);
+}
+
+int SDL2::setSoundVolume(int volume) {
+  return Mix_Volume(-1, volume);
+}
+
 Uint64 SDL2::elapsedTimeInMillis() {
   return SDL_GetTicks64();
 }
@@ -98,7 +162,11 @@ void SDL2::delay(Uint32 timeInMillis) {
   SDL_Delay(timeInMillis);
 }
 
-void SDL2::close(SDL2::Window window) {
+void SDL2::close(SDL2::Window window, SDL2::Renderer renderer) {
+  SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
+
+  Mix_Quit();
+  IMG_Quit();
   SDL_Quit();
 }

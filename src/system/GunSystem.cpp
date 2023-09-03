@@ -1,8 +1,8 @@
 #include "GunSystem.h"
 #include "utils/Math.h"
 
-GunSystem::GunSystem(EntityManager& em, TextureRepo& textureRepo)
-    : _em(em), _textureRepo(textureRepo) {}
+GunSystem::GunSystem(EntityManager& em, TextureRepo& textureRepo, MusicManager& musicManager)
+    : _em(em), _textureRepo(textureRepo), _musicManager(musicManager) {}
 
 void GunSystem::spawnProjectiles() {
   const auto& activeEntities = _em.getActive();
@@ -53,4 +53,7 @@ void GunSystem::createProjectile(const GunComponent&       gun,
     .add<SpeedComponent>(speed)
     .add<ColliderComponent>(collider)
     .addFlags(enemyFlag);
+
+  if (gun.ammo.soundId != SoundId::NONE)
+    _musicManager.playSound(gun.ammo.soundId);
 }

@@ -5,19 +5,23 @@ SystemManager::SystemManager(EntityManager&    em,
                              TextureRepo&      texRepo,
                              PlayerController& pControl,
                              TextRenderer&     textRenderer,
-                             LevelManager&     levelManager)
+                             LevelManager&     levelManager,
+                             MusicManager&     musicManager)
     : _em(em)
     , _textureSystem(em)
     , _positionSystem(em)
-    , _colliderSystem(em, texRepo)
-    , _gunSystem(em, texRepo)
+    , _colliderSystem(em, texRepo, musicManager)
+    , _gunSystem(em, texRepo, musicManager)
     , _pControl(pControl)
     , _levelManager(levelManager)
+    , _musicManager(musicManager)
     , _bgManager(texRepo) {}
 
 void SystemManager::init(SDL2::Renderer renderer) {
   _textureSystem.setRenderer(renderer);
   _bgManager.setRenderer(renderer);
+  _musicManager.init();
+  _musicManager.playMusic(MusicId::LOAD);
 }
 
 void SystemManager::update() {

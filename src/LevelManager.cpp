@@ -3,14 +3,21 @@
 
 static constexpr auto RESULT_DELAY_FRAMES{ 20 };
 
+static constexpr auto WIN_TITLE{ "You Win!" };
+static constexpr auto GAME_OVER{ "Game Over" };
+static constexpr auto START_SUBTITLE{ "Press enter to start" };
+static constexpr auto PLAY_AGAIN{ "Press enter to play again" };
+
 LevelManager::LevelManager(EntityManager&    em,
                            PlayerController& pControl,
                            TextureRepo&      texRepo,
-                           TextRenderer&     textRenderer)
+                           TextRenderer&     textRenderer,
+                           MusicManager&     musicManager)
     : _em(em)
     , _pControl(pControl)
     , _texRepo(texRepo)
     , _textRenderer(textRenderer)
+    , _musicManager(musicManager)
     , _enemyManager(em, texRepo)
     , _currentStatus(GameStatus::NONE)
     , _countdown(0) {
@@ -19,13 +26,13 @@ LevelManager::LevelManager(EntityManager&    em,
   Phase phase;
 
   Spawner spawner;
-  spawner.settings.push_back({ 40, 60, 3, 100 });
-  spawner.settings.push_back({ 40, 60, 3, 200 });
-  spawner.settings.push_back({ 40, 60, 3, 300 });
-  spawner.settings.push_back({ 40, 60, 3, 400 });
-  spawner.settings.push_back({ 40, 60, 3, 500 });
-  spawner.settings.push_back({ 40, 60, 3, 600 });
-  spawner.settings.push_back({ 40, 60, 3, 700 });
+  spawner.settings.push_back({ 80, 60, 3, 100 });
+  spawner.settings.push_back({ 80, 60, 3, 200 });
+  spawner.settings.push_back({ 80, 60, 3, 300 });
+  spawner.settings.push_back({ 80, 60, 3, 400 });
+  spawner.settings.push_back({ 80, 60, 3, 500 });
+  spawner.settings.push_back({ 80, 60, 3, 600 });
+  spawner.settings.push_back({ 80, 60, 3, 700 });
   spawner.type = EnemyType::BASIC;
   phase.spawners.push_back(spawner);
   _currentLevel.phases.push_back(phase);
@@ -33,11 +40,11 @@ LevelManager::LevelManager(EntityManager&    em,
   auto it  = phase.spawners[0].settings.begin();
   auto end = phase.spawners[0].settings.end();
   while (it != end) {
-    it->startingCooldown += 200;
+    it->startingCooldown += 160;
     it->coolDown = 80;
     ++it;
     if (it != end) {
-      it->startingCooldown += 240;
+      it->startingCooldown += 200;
       it->coolDown = 80;
       ++it;
     }
@@ -73,14 +80,13 @@ void LevelManager::reset() {
   _textRenderer.clearCenterText();
   _pControl.reset();
   _em.reset();
-  _texRepo.clearCache();
+  _texRepo.clear();
 }
 
 GameStatus LevelManager::updateStatus() {
   switch (_currentStatus) {
     case GameStatus::NONE:
-      _textRenderer.showCenterText(Constants::GAME_NAME,
-                                   "Press enter to start");
+      _textRenderer.showCenterText(Constants::GAME_NAME, START_SUBTITLE);
       break;
     case GameStatus::ONGOING:
       if (_pControl.checkPlayerDead())
@@ -89,16 +95,10 @@ GameStatus LevelManager::updateStatus() {
         updateLevel();
       break;
     case GameStatus::LOSE:
-      if (_countdown == 0)
-        _textRenderer.showCenterText("Game Over", "Press enter to play again");
-      else
-        --_countdown;
+      displayResult(GAME_OVER, PLAY_AGAIN, SoundId::FAIL);
       break;
     case GameStatus::WIN:
-      if (_countdown == 0)
-        _textRenderer.showCenterText("You Win!", "Press enter to play again");
-      else
-        --_countdown;
+      displayResult(WIN_TITLE, PLAY_AGAIN, SoundId::VICTORY);
       break;
   }
   return _currentStatus;
@@ -111,6 +111,20 @@ GameStatus LevelManager::getStatus() const {
 void LevelManager::setResult(GameStatus status) {
   _countdown     = RESULT_DELAY_FRAMES;
   _currentStatus = status;
+}
+
+void LevelManager::displayResult(const char*  title,
+                                 const char*  subtitle,
+                                 unsigned int soundId) {
+  if (_countdown > 0) {
+    --_countdown;
+  } else {
+    if (_countdown == 0) {
+      _musicManager.playSound(soundId);
+      --_countdown;
+    }
+    _textRenderer.showCenterText(title, subtitle);
+  }
 }
 
 void LevelManager::updateLevel() {

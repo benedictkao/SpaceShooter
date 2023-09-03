@@ -18,13 +18,18 @@ enum GAME_INIT_ERROR { SUBSYSTEM = 1, WINDOW, RENDERER };
 Game::Game()
     : _playerController(_em, _texRepo)
     , _textRenderer(_em, _texRepo)
-    , _levelManager(_em, _playerController, _texRepo, _textRenderer)
-    , _keyboardManager(_playerController, _levelManager)
+    , _levelManager(_em,
+                    _playerController,
+                    _texRepo,
+                    _textRenderer,
+                    _musicManager)
+    , _keyboardManager(_playerController, _levelManager, _musicManager)
     , _systemManager(_em,
                      _texRepo,
                      _playerController,
                      _textRenderer,
-                     _levelManager) {}
+                     _levelManager,
+                     _musicManager) {}
 
 int Game::run() {
   const int initResult = SDL2::init();
@@ -72,7 +77,8 @@ int Game::run() {
     SDL2::delay(static_cast<Uint32>(sleepTime));
   }
 
-  SDL2::close(window);
+  _texRepo.clear();
+  SDL2::close(window, renderer);
   return 0;
 }
 

@@ -26,7 +26,7 @@ SDL2::TextureData TextureRepo::loadText(const char* text, int size) {
   return SDL2::loadText(text, size, _renderer);
 }
 
-void TextureRepo::clearCache() {
+void TextureRepo::clear() {
   for (const auto& pair : _textureMap)
     SDL2::destroyTexture(pair.second);
   _textureMap.clear();
