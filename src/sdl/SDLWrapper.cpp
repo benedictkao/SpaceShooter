@@ -1,6 +1,4 @@
 #include "SDLWrapper.h"
-#include "SDLWrapper.h"
-#include "SDLWrapper.h"
 #include "Constants.h"
 #include "SDLWrapper.h"
 #include <SDL_image.h>
@@ -34,6 +32,8 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
   if (!texture)
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
                    SDL_LOG_PRIORITY_INFO,
+                   "Failed to load texture %s. Error: %s",
+                   path,
                    IMG_GetError());
   else
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
@@ -44,12 +44,13 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
   return texture;
 }
 
-SDL2::TextureData
-SDL2::loadText(const char* text, int size, Renderer renderer) {
-  // TODO: take this as input
-  SDL_Color color = { 204, 204, 0 };
-  // TODO: store this somewhere?
-  TTF_Font*    font        = TTF_OpenFont("../../../res/font/retro.ttf", size);
+SDL2::TextureData SDL2::loadText(const char*  text,
+                                 const char*  fontPath,
+                                 unsigned int size,
+                                 const Color& color,
+                                 Renderer     renderer) {
+  // TODO: should this be taken as input?
+  TTF_Font*    font        = TTF_OpenFont(fontPath, size);
   SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, color);
 
   Texture     tex  = SDL_CreateTextureFromSurface(renderer, textSurface);
@@ -103,6 +104,8 @@ SDL2::Music SDL2::loadMusic(const char* path) {
   if (!music)
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
                    SDL_LOG_PRIORITY_INFO,
+                   "Failed to load music %s. Error: %s",
+                   path,
                    Mix_GetError());
   else
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
@@ -117,6 +120,8 @@ SDL2::Sound SDL2::loadSound(const char* path) {
   if (!sound)
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,
                    SDL_LOG_PRIORITY_INFO,
+                   "Failed to load sound %s. Error: %s",
+                   path,
                    Mix_GetError());
   else
     SDL_LogMessage(SDL_LOG_CATEGORY_APPLICATION,

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "EntityManager.h"
+#include "LevelManager.h"
 #include "MusicManager.h"
 #include "TextureRepo.h"
 
@@ -9,9 +10,10 @@ private:
   EntityManager& _em;
   TextureRepo&   _texRepo;
   MusicManager&  _musicManager;
+  LevelManager&  _lvlManager;
 
 public:
-  ColliderSystem(EntityManager&, TextureRepo&, MusicManager&);
+  ColliderSystem(EntityManager&, TextureRepo&, MusicManager&, LevelManager&);
   void calculateCollisions();
 
 private:

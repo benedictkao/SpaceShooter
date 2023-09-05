@@ -1,6 +1,16 @@
 #include "EnemyManager.h"
 #include <utility>
 
+static constexpr auto BASIC_ENEMY_SIZE{ 42 };
+static constexpr auto BASIC_ENEMY_SPEED{ 3 };
+static constexpr auto BASIC_ENEMY_HP{ 1 };
+static constexpr auto BASIC_ENEMY_POINTS{ 10 };
+
+static constexpr auto BOSS_SIZE{ 80 };
+static constexpr auto BOSS_SPEED{ 2 };
+static constexpr auto BOSS_HP{ 20 };
+static constexpr auto BOSS_POINTS{ 80 };
+
 EnemyManager::EnemyManager(EntityManager& em, TextureRepo& texRepo)
     : _em(em), _texRepo(texRepo) {}
 
@@ -40,19 +50,19 @@ bool EnemyManager::allEnemiesDead() const {
 void EnemyManager::spawnBasic(const Point& pos) {
   TransformComponent t;
   t.position = pos;
-  t.height   = 42;
-  t.width    = 42;
+  t.height = t.width = BASIC_ENEMY_SIZE;
 
   SpeedComponent speed;
   speed.direction = { 0, 1 };
-  speed.speed     = 3;
+  speed.speed     = BASIC_ENEMY_SPEED;
 
   SpriteComponent sprite;
   sprite.texture = _texRepo.loadTexture(TextureId::BASIC_ENEMY);
 
   ColliderComponent collider;
-  collider.health = collider.damage = 1;
+  collider.health = collider.damage = BASIC_ENEMY_HP;
   collider.deathAnim                = AnimationId::DEFAULT_EXPLOSION;
+  collider.scorePoints              = BASIC_ENEMY_POINTS;
 
   int enemyId = _em.addEntity()
                   .add<TransformComponent>(t)
@@ -67,8 +77,7 @@ void EnemyManager::spawnBasic(const Point& pos) {
 void EnemyManager::spawnBoss(const Point& pos) {
   TransformComponent t;
   t.position = pos;
-  t.height   = 80;
-  t.width    = 80;
+  t.height = t.width = BOSS_SIZE;
 
   PathComponent path;
   path.points.push_back({ 400, 100 });
@@ -79,14 +88,15 @@ void EnemyManager::spawnBoss(const Point& pos) {
 
   SpeedComponent speed;
   speed.direction = { 0, 0 };
-  speed.speed     = 2;
+  speed.speed     = BOSS_SPEED;
 
   SpriteComponent sprite;
   sprite.texture = _texRepo.loadTexture(TextureId::BOSS_ENEMY);
 
   ColliderComponent collider;
-  collider.health = collider.damage = 20;
+  collider.health = collider.damage = BOSS_HP;
   collider.deathAnim                = AnimationId::DEFAULT_EXPLOSION;
+  collider.scorePoints              = BOSS_POINTS;
 
   GunComponent g;
   g.ammo      = AmmoTypes::ENEMY_BOSS;

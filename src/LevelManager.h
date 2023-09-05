@@ -22,6 +22,7 @@ private:
   EnemyManager      _enemyManager;
   GameStatus        _currentStatus;
   unsigned int      _countdown;
+  unsigned int      _currentScore;
   Level             _currentLevel;
 
 public:
@@ -32,13 +33,15 @@ public:
                MusicManager&);
 
   void       initLevel();
+  void       addScore(unsigned int);
   void       reset();
   GameStatus updateStatus();
   GameStatus getStatus() const;
 
 private:
   void setResult(GameStatus);
-  void displayResult(const char* title, const char* subtitle, unsigned int soundId);
+  void
+  displayResult(const char* title, const char* subtitle, unsigned int soundId);
   void updateLevel();
   void initNextPhase();
 };

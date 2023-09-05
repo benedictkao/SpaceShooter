@@ -1,5 +1,4 @@
 #include "TextureRepo.h"
-#include <iostream>
 
 void TextureRepo::setRenderer(SDL2::Renderer renderer) {
   _renderer = renderer;
@@ -13,17 +12,22 @@ SDL2::Texture TextureRepo::loadTexture(unsigned int id) {
     _textureMap[id]   = tex;
     return tex;
   } else {
-    //std::cout << "Texture " << path << " loaded from cache" << std::endl;
     return it->second;
   }
 }
 
-SDL2::Texture TextureRepo::loadWithoutCache(unsigned int id) {
+SDL2::Texture TextureRepo::loadWithoutCache(unsigned int id) const {
   return SDL2::loadTexture(TextureId::getPath(id), _renderer);
 }
 
-SDL2::TextureData TextureRepo::loadText(const char* text, int size) {
-  return SDL2::loadText(text, size, _renderer);
+SDL2::TextureData TextureRepo::loadText(const char*       text,
+                                        unsigned int id) const {
+  const TextParams& params = FontId::getParams(id);
+  return SDL2::loadText(text,
+                        params.fontPath,
+                        params.size,
+                        { params.r, params.g, params.b },
+                        _renderer);
 }
 
 void TextureRepo::clear() {

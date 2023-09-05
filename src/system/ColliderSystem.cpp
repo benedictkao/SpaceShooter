@@ -6,8 +6,12 @@
 
 ColliderSystem::ColliderSystem(EntityManager& em,
                                TextureRepo&   texRepo,
-                               MusicManager&  musicManager)
-    : _em(em), _texRepo(texRepo), _musicManager(musicManager) {}
+                               MusicManager&  musicManager,
+                               LevelManager&  lvlManager)
+    : _em(em)
+    , _texRepo(texRepo)
+    , _musicManager(musicManager)
+    , _lvlManager(lvlManager) {}
 
 static inline SDL2::Rect toRect(const TransformComponent& transform) {
   return { transform.position.x - transform.width / 2,
@@ -17,9 +21,8 @@ static inline SDL2::Rect toRect(const TransformComponent& transform) {
 }
 
 static inline void collide(ColliderComponent* a, ColliderComponent* b) {
-  a->health -= b->damage == Mass::INFINITE ? a->health : b->damage;
-  b->health -= a->damage == Mass::INFINITE ? b->health : a->damage;
-  std::cout << "Collide" << std::endl;
+  a->health -= b->damage;
+  b->health -= a->damage;
 }
 
 void ColliderSystem::calculateCollisions() {
@@ -47,11 +50,14 @@ void ColliderSystem::calculateCollisions() {
         _em.getComponent<TransformComponent>(enemy.entity);
       const SDL2::Rect enemyRect = toRect(enemyTransform);
       if (SDL2::hasIntersect(allyRect, enemyRect)) {
+        std::cout << "Entity " << ally.entity << " collide with "
+                  << enemy.entity << std::endl;
         collide(ally.collider, enemy.collider);
         if (ally.collider->health <= 0)
           handleDeadEntity(ally, allyTransform);
-        if (enemy.collider->health <= 0)
+        if (enemy.collider->health <= 0) {
           handleDeadEntity(enemy, enemyTransform);
+        }
       }
     }
   }
@@ -69,6 +75,7 @@ void ColliderSystem::handleDeadEntity(const ColliderPair& pair,
     a.height           = params.height;
     a.currFrame        = 0;
     _musicManager.playSound(params.soundId);
+    _lvlManager.addScore(pair.collider->scorePoints);
     _em.addEntity().add<TransformComponent>(transform).add<AnimationComponent>(
       a);
   }

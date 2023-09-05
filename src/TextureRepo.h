@@ -16,9 +16,9 @@ private:
 public:
   void          setRenderer(SDL2::Renderer);
   SDL2::Texture loadTexture(unsigned int id);
-  SDL2::Texture loadWithoutCache(unsigned int id);
+  SDL2::Texture loadWithoutCache(unsigned int id) const;
 
-  SDL2::TextureData loadText(const char*, int size);
+  SDL2::TextureData loadText(const char* text, unsigned int id) const;
 
   void clear();
 };

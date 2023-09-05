@@ -10,7 +10,7 @@ SystemManager::SystemManager(EntityManager&    em,
     : _em(em)
     , _textureSystem(em)
     , _positionSystem(em)
-    , _colliderSystem(em, texRepo, musicManager)
+    , _colliderSystem(em, texRepo, musicManager, levelManager)
     , _gunSystem(em, texRepo, musicManager)
     , _pControl(pControl)
     , _levelManager(levelManager)

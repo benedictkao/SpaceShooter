@@ -6,7 +6,7 @@
 
 struct PathComponent {
   std::vector<Point> points;
-  unsigned int          current;
+  unsigned int       current;
   int repeatFrom; // TODO: make this a vector for list of repeat from and repeat
                   // time instructions
 

@@ -10,9 +10,16 @@ namespace SDL2 {
   typedef SDL_Texture*  Texture;
   typedef SDL_Event     Event;
   typedef SDL_Rect      Rect;
+  typedef SDL_Color     Color;
 
   typedef Mix_Music* Music;
   typedef Mix_Chunk* Sound;
+
+  struct TextParams {
+    const char*  text;
+    unsigned int size;
+    Color        color;
+  };
 
   struct TextureData {
     Texture tex;
@@ -32,7 +39,11 @@ namespace SDL2 {
 
   Texture loadTexture(const char*, Renderer);
 
-  TextureData loadText(const char*, int size, Renderer);
+  TextureData loadText(const char*  text,
+                       const char*  fontPath,
+                       unsigned int size,
+                       const Color& color,
+                       Renderer);
 
   void blit(Texture, Renderer, const Rect& dest);
 

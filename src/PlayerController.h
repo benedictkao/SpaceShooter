@@ -2,12 +2,14 @@
 
 #include "../EntityManager.h"
 #include "TextureRepo.h"
+#include <stack>
 
 class PlayerController {
 private:
-  EntityManager& _em;
-  TextureRepo&   _textureRepo;
-  int            _playerId;
+  EntityManager&  _em;
+  TextureRepo&    _textureRepo;
+  int             _playerId;
+  std::stack<int> _hpIds;
 
 public:
   PlayerController(EntityManager&, TextureRepo&);
@@ -15,6 +17,7 @@ public:
   void addPlayer(int x, int y);
   bool isPlayer(int) const;
   int  getPlayerId() const;
+  void updateHpBar();
   void keepWithinWindow();
   bool checkPlayerDead();
   void reset();

@@ -5,7 +5,7 @@
 
 class TextRenderer {
 private:
-  struct TextIds {
+  struct TitleTextIds {
     int title;
     int subtitle;
 
@@ -15,13 +15,19 @@ private:
 
   EntityManager& _em;
   TextureRepo&   _texRepo;
-  TextIds        _textIds;
+  TitleTextIds   _textIds;
+  int            _scoreId;
 
 public:
   TextRenderer(EntityManager&, TextureRepo&);
 
   void showCenterText(const char* title, const char* subtitle);
+  void showScore(unsigned int);
+
+  void clearAllTexts();
+
   void clearCenterText();
+  void clearScore();
 
 private:
   void clearTexture(int);

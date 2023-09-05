@@ -20,7 +20,8 @@ LevelManager::LevelManager(EntityManager&    em,
     , _musicManager(musicManager)
     , _enemyManager(em, texRepo)
     , _currentStatus(GameStatus::NONE)
-    , _countdown(0) {
+    , _countdown(0)
+    , _currentScore(0) {
 
   // TODO: optimize this!
   Phase phase;
@@ -64,9 +65,10 @@ void LevelManager::initLevel() {
 
   // pre-load common textures
   _texRepo.loadTexture(TextureId::BOSS_ENEMY);
-  _texRepo.loadTexture(TextureId::RED_BULLET);
+  _texRepo.loadTexture(TextureId::FIREBALL);
+  _texRepo.loadTexture(TextureId::HEART);
   _texRepo.loadTexture(TextureId::GREEN_SHIP);
-  _texRepo.loadTexture(TextureId::YELLOW_BULLET);
+  _texRepo.loadTexture(TextureId::BLUE_BULLET);
   _texRepo.loadTexture(TextureId::BASIC_ENEMY);
   _texRepo.loadTexture(TextureId::EXPLOSION);
 
@@ -76,11 +78,18 @@ void LevelManager::initLevel() {
   _currentStatus = GameStatus::ONGOING;
 }
 
+void LevelManager::addScore(unsigned int score) {
+  _currentScore += score;
+}
+
 void LevelManager::reset() {
   _textRenderer.clearCenterText();
+  _textRenderer.clearScore();
   _pControl.reset();
   _em.reset();
   _texRepo.clear();
+  _currentScore = 0;
+  _countdown    = 0;
 }
 
 GameStatus LevelManager::updateStatus() {
@@ -89,6 +98,7 @@ GameStatus LevelManager::updateStatus() {
       _textRenderer.showCenterText(Constants::GAME_NAME, START_SUBTITLE);
       break;
     case GameStatus::ONGOING:
+      _pControl.updateHpBar();
       if (_pControl.checkPlayerDead())
         setResult(GameStatus::LOSE);
       else
@@ -128,6 +138,8 @@ void LevelManager::displayResult(const char*  title,
 }
 
 void LevelManager::updateLevel() {
+  _textRenderer.showScore(_currentScore);
+
   bool phaseComplete = true;
 
   const auto& activeEntities = _em.getActive();

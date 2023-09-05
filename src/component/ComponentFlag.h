@@ -12,5 +12,6 @@ enum ComponentFlag : unsigned int {
   SPAWN     = ONE << 6,
   TEXT      = ONE << 7,
   PATH      = ONE << 8,
+  SCORE     = ONE << 9,
   ENEMY     = ONE << 31
 };

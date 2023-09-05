@@ -4,7 +4,12 @@
 
 static constexpr int  PLAYER_SPEED{ 8 };
 static constexpr int  PLAYER_HP{ 3 };
+static constexpr auto PLAYER_SIZE{ 32 };
 static constexpr auto PLAYER_SPRITE_PATH{ "../../../res/player.png" };
+
+static constexpr auto HP_SIZE{ 24 };
+static constexpr auto HP_GAP{ 5 };
+static constexpr auto HP_BAR_Y_POS{ 570 };
 
 PlayerController::PlayerController(EntityManager& em, TextureRepo& textureRepo)
     : _em(em), _textureRepo(textureRepo), _playerId(-1) {}
@@ -17,6 +22,22 @@ void PlayerController::addPlayer(int x, int y) {
                 .add<ColliderComponent>(createCollider())
                 .add<SpeedComponent>({ { 0, 0 }, PLAYER_SPEED })
                 .id();
+
+  SpriteComponent hpSprite;
+  hpSprite.texture = _textureRepo.loadTexture(TextureId::HEART);
+
+  TransformComponent hpTransform;
+  hpTransform.position = { 0, HP_BAR_Y_POS };
+  hpTransform.height   = HP_SIZE;
+  hpTransform.width    = HP_SIZE;
+  for (int i = 0; i < PLAYER_HP; ++i) {
+    hpTransform.position.x += HP_SIZE + HP_GAP;
+    int id = _em.addEntity()
+               .add<TransformComponent>(hpTransform)
+               .add<SpriteComponent>(hpSprite)
+               .id();
+    _hpIds.push(id);
+  }
 }
 
 bool PlayerController::isPlayer(int id) const {
@@ -25,6 +46,17 @@ bool PlayerController::isPlayer(int id) const {
 
 int PlayerController::getPlayerId() const {
   return _playerId;
+}
+
+void PlayerController::updateHpBar() {
+  int currentHp = _em.getComponent<ColliderComponent>(_playerId).health;
+  coercePositive(currentHp);
+  int displayHp = _hpIds.size();
+  while (displayHp > currentHp) {
+    _em.scheduleRemoval(_hpIds.top());
+    _hpIds.pop();
+    --displayHp;
+  }
 }
 
 void PlayerController::keepWithinWindow() {
@@ -46,6 +78,8 @@ bool PlayerController::checkPlayerDead() {
 
 void PlayerController::reset() {
   _playerId = -1;
+  while (!_hpIds.empty())
+    _hpIds.pop();
 }
 
 SpriteComponent PlayerController::createSprite() const {
@@ -58,8 +92,8 @@ TransformComponent PlayerController::createTransform(int x, int y) {
   TransformComponent transform;
   transform.position.x = x;
   transform.position.y = y;
-  transform.height     = 32;
-  transform.width      = 32;
+  transform.height     = PLAYER_SIZE;
+  transform.width      = PLAYER_SIZE;
   return transform;
 }
 
@@ -74,9 +108,9 @@ GunComponent PlayerController::createGun() {
 
 ColliderComponent PlayerController::createCollider() {
   ColliderComponent collider;
-  collider.health    = PLAYER_HP;
-  collider.damage    = Mass::INFINITE;
-  collider.deathAnim = AnimationId::DEFAULT_EXPLOSION;
+  collider.health = collider.damage = PLAYER_HP;
+  collider.deathAnim                = AnimationId::DEFAULT_EXPLOSION;
+  collider.scorePoints              = 0;
   return collider;
 }
 

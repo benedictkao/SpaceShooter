@@ -35,7 +35,7 @@ target_link_libraries(systems PRIVATE sdl components)
 target_include_directories(systems PRIVATE "${PROJECT_SOURCE_DIR}/src")
 target_include_directories(systems INTERFACE "${PROJECT_SOURCE_DIR}/src/system")
 
-add_executable(main 
+add_executable(SpaceShooter 
     "src/main.cpp" 
     "src/Game.cpp"
     "src/EnemyManager.cpp"
@@ -48,8 +48,10 @@ add_executable(main
     "src/BackgroundManager.cpp"
     "src/MusicManager.cpp"
 )
-target_link_libraries(main
+target_link_libraries(SpaceShooter
     sdl
     components
     systems
 )
+## Below line removals terminal window from executable
+#target_link_options(SpaceShooter PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")

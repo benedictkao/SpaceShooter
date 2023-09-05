@@ -1,7 +1,9 @@
 #include "GunSystem.h"
 #include "utils/Math.h"
 
-GunSystem::GunSystem(EntityManager& em, TextureRepo& textureRepo, MusicManager& musicManager)
+GunSystem::GunSystem(EntityManager& em,
+                     TextureRepo&   textureRepo,
+                     MusicManager&  musicManager)
     : _em(em), _textureRepo(textureRepo), _musicManager(musicManager) {}
 
 void GunSystem::spawnProjectiles() {
@@ -30,20 +32,21 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   sprite.texture = _textureRepo.loadTexture(gun.ammo.assetId);
 
   TransformComponent transform;
-  transform.height = gun.ammo.height;
-  transform.width  = gun.ammo.width;
-  transform.position.x      = parent.position.x;
-  int sign         = gun.direction == Direction::DOWN ? 1 : -1;
-  transform.position.y      = parent.position.y + sign * parent.height / 2;
+  transform.height     = gun.ammo.height;
+  transform.width      = gun.ammo.width;
+  transform.position.x = parent.position.x;
+  int sign             = gun.direction == Direction::DOWN ? 1 : -1;
+  transform.position.y = parent.position.y + sign * parent.height / 2;
 
   SpeedComponent speed;
   speed.direction = gun.direction;
   speed.speed     = gun.ammo.speed;
 
   ColliderComponent collider;
-  collider.health    = gun.ammo.damage;
-  collider.damage    = gun.ammo.damage;
-  collider.deathAnim = AnimationId::NONE;
+  collider.health      = gun.ammo.damage;
+  collider.damage      = gun.ammo.damage;
+  collider.deathAnim   = AnimationId::NONE;
+  collider.scorePoints = 0;
 
   unsigned int enemyFlag = isEnemy ? ComponentFlag::ENEMY : 0;
 
