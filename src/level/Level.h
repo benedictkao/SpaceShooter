@@ -17,6 +17,8 @@ struct Spawner {
 
 struct Phase {
   std::vector<Spawner> spawners;
+  int                  musicId;
+  int                  minDuration;
 };
 
 struct Level {

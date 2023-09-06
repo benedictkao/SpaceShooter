@@ -7,7 +7,7 @@
 #include <tuple>
 #include <unordered_set>
 
-constexpr int MAX_ENTITIES{ 50 };
+constexpr int MAX_ENTITIES{ 64 };
 
 class EntitySettings {
 private:

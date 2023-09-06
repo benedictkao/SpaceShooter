@@ -54,4 +54,4 @@ target_link_libraries(SpaceShooter
     systems
 )
 ## Below line removals terminal window from executable
-#target_link_options(SpaceShooter PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")
+target_link_options(SpaceShooter PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")

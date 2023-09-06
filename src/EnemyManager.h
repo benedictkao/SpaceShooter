@@ -15,9 +15,10 @@ private:
 
 public:
   EnemyManager(EntityManager&, TextureRepo&);
-  void spawnEnemy(int spawnerId);
+  void updateSpawner(int spawnerId);
   void updateActiveEnemies();
   bool allEnemiesDead() const;
+  void reset();
 
 private:
   void spawnBasic(const Point&);

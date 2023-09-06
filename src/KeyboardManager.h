@@ -21,4 +21,5 @@ public:
 private:
   void handleLoadScreenKeydownEvent(const SDL2::Event&);
   void handleInGameKeydownEvent(const SDL2::Event&);
+  void handlePauseKeydownEvent(const SDL2::Event&);
 };

@@ -1,13 +1,16 @@
 #pragma once
 
 #include "EntityManager.h"
+#include "SDLWrapper.h"
 #include "TextureRepo.h"
+#include <array>
 
 class TextRenderer {
 private:
   struct TitleTextIds {
-    int title;
-    int subtitle;
+    int                title;
+    std::array<int, 3> subtitles;
+    int                selectedOption;
 
     bool isEmpty() const;
     void clear();
@@ -22,7 +25,11 @@ public:
   TextRenderer(EntityManager&, TextureRepo&);
 
   void showCenterText(const char* title, const char* subtitle);
-  void showScore(unsigned int);
+  void showOptionText(const char*                title,
+                      std::array<const char*, 3> options,
+                      unsigned int               selection);
+  void showEmptyScore();
+  void updateScore(unsigned int) const;
 
   void clearAllTexts();
 
@@ -30,5 +37,8 @@ public:
   void clearScore();
 
 private:
-  void clearTexture(int);
+  SDL2::TextureData getTitleTexData(const char*);
+  SDL2::TextureData getSubtitleTexData(const char*);
+  SDL2::TextureData getSelectedOptionTexData(const char*);
+  void              clearTexture(int);
 };

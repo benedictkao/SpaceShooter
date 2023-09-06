@@ -21,6 +21,7 @@ public:
   void close();
 
 private:
+  void initMusic(unsigned int id);
   void initSound(unsigned int id);
   void initSound(unsigned int id, int volume);
 };

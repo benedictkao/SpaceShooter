@@ -27,7 +27,16 @@ namespace TextureId {
 } // namespace TextureId
 
 namespace MusicId {
+  constexpr auto NONE{ -1 };
   constexpr auto LOAD{ 0 };
+  constexpr auto BOSS{ 1 };
+
+  constexpr const char* PATHS[] = { "../../../res/audio/cruising.mp3",
+                                    "../../../res/audio/boss.mp3" };
+
+  constexpr const char* getPath(unsigned int id) {
+    return PATHS[id];
+  }
 } // namespace MusicId
 
 namespace SoundId {
@@ -39,12 +48,13 @@ namespace SoundId {
   constexpr auto PLAYER_DAMAGE{ 4 };
   constexpr auto VICTORY{ 5 };
   constexpr auto FAIL{ 6 };
+  constexpr auto LOUD_EXPLODE{ 7 };
 
   constexpr const char* PATHS[] = {
     "../../../res/audio/game-start.mp3",    "../../../res/audio/explode.wav",
     "../../../res/audio/pew.wav",           "../../../res/audio/shoot-fire.mp3",
     "../../../res/audio/player-damage.mp3", "../../../res/audio/victory.mp3",
-    "../../../res/audio/fail.mp3"
+    "../../../res/audio/fail.mp3",          "../../../res/audio/explode.wav"
   };
 
   constexpr const char* getPath(unsigned int id) {
@@ -62,9 +72,11 @@ const struct AnimationParams {
 namespace AnimationId {
   constexpr int NONE{ -1 };
   constexpr int DEFAULT_EXPLOSION{ 0 };
+  constexpr int LOUD_EXPLOSION{ 1 };
 
   constexpr AnimationParams PARAMS[] = {
-    { TextureId::EXPLOSION, 32, 32, SoundId::EXPLODE }
+    { TextureId::EXPLOSION, 32, 32, SoundId::EXPLODE },
+    { TextureId::EXPLOSION, 32, 32, SoundId::LOUD_EXPLODE }
   };
 
   constexpr AnimationParams getParams(unsigned int id) {
@@ -85,10 +97,12 @@ constexpr auto RETRO_FONT_PATH{ "../../../res/font/retro.ttf" };
 namespace FontId {
   constexpr int TITLE{ 0 };
   constexpr int SUBTITLE{ 1 };
-  constexpr int SCORE{ 2 };
+  constexpr int SUBTITLE_INVERSE{ 2 };
+  constexpr int SCORE{ 3 };
 
   constexpr TextParams PARAMS[] = { { 48, RETRO_FONT_PATH, 204, 204, 0 },
                                     { 24, RETRO_FONT_PATH, 204, 204, 0 },
+                                    { 24, RETRO_FONT_PATH, 6, 18, 33 },
                                     { 18, RETRO_FONT_PATH, 220, 220, 220 } };
 
   constexpr TextParams getParams(unsigned int id) {

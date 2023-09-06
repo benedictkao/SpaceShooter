@@ -22,21 +22,33 @@ void SystemManager::init(SDL2::Renderer renderer) {
   _bgManager.setRenderer(renderer);
   _musicManager.init();
   _musicManager.playMusic(MusicId::LOAD);
+  addDummyPlayer();
 }
 
 void SystemManager::update() {
   _bgManager.updateBackground();
 
-  _positionSystem.updatePositions();
+  if (_levelManager.getStatus() != GameStatus::PAUSE) {
+    _positionSystem.updatePositions();
+    _gunSystem.spawnProjectiles();
+  }
+
   if (_levelManager.getStatus() == GameStatus::ONGOING)
     _pControl.keepWithinWindow();
 
   _colliderSystem.calculateCollisions();
-  _gunSystem.spawnProjectiles();
 
   _textureSystem.updateSprites();
   _textureSystem.updateAnimations();
 
   _levelManager.updateStatus();
   _em.removeDeadEntities();
+}
+
+void SystemManager::addDummyPlayer() const {
+  _em.addEntity()
+    .add<SpriteComponent>(_pControl.createSprite())
+    .add<TransformComponent>(
+      _pControl.createTransform(Constants::PLAYER_START_X,
+                                Constants::PLAYER_START_Y));
 }

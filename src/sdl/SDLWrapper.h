@@ -42,7 +42,14 @@ namespace SDL2 {
   TextureData loadText(const char*  text,
                        const char*  fontPath,
                        unsigned int size,
-                       const Color& color,
+                       const Color& textColor,
+                       Renderer);
+
+    TextureData loadTextWithBackground(const char*  text,
+                       const char*  fontPath,
+                       unsigned int size,
+                       const Color& textColor,
+                       const Color& bgColor,
                        Renderer);
 
   void blit(Texture, Renderer, const Rect& dest);
@@ -82,6 +89,8 @@ namespace SDL2 {
   Uint64 elapsedTimeInMillis();
 
   void delay(Uint32);
+
+  void quit();
 
   void close(Window, Renderer);
 } // namespace SDL2

@@ -1,4 +1,5 @@
 #include "EnemyManager.h"
+#include <iostream>
 #include <utility>
 
 static constexpr auto BASIC_ENEMY_SIZE{ 42 };
@@ -8,17 +9,17 @@ static constexpr auto BASIC_ENEMY_POINTS{ 10 };
 
 static constexpr auto BOSS_SIZE{ 80 };
 static constexpr auto BOSS_SPEED{ 2 };
-static constexpr auto BOSS_HP{ 20 };
+static constexpr auto BOSS_HP{ 25 };
 static constexpr auto BOSS_POINTS{ 80 };
 
 EnemyManager::EnemyManager(EntityManager& em, TextureRepo& texRepo)
     : _em(em), _texRepo(texRepo) {}
 
-void EnemyManager::spawnEnemy(int spawnerId) {
+void EnemyManager::updateSpawner(int spawnerId) {
   SpawnComponent&     spawner = _em.getComponent<SpawnComponent>(spawnerId);
   TransformComponent& parentTransform =
     _em.getComponent<TransformComponent>(spawnerId);
-  if (--spawner.currCoolDown == 0) {
+  if (--spawner.currCoolDown <= 0) {
     switch (spawner.type) {
       case EnemyType::BASIC:
         spawnBasic(parentTransform.position);
@@ -36,21 +37,27 @@ void EnemyManager::spawnEnemy(int spawnerId) {
 void EnemyManager::updateActiveEnemies() {
   auto& it = _activeEnemies.begin();
   while (it != _activeEnemies.end()) {
-    if (_em.isActive(*it))
-      ++it;
-    else
+    if (_em.isScheduledForRemoval(*it))
       it = _activeEnemies.erase(it);
+    else
+      ++it;
   }
 }
 
 bool EnemyManager::allEnemiesDead() const {
+  // std::cout << "num enemies: " << _activeEnemies.size() << std::endl;
   return _activeEnemies.empty();
+}
+
+void EnemyManager::reset() {
+  _activeEnemies.clear();
 }
 
 void EnemyManager::spawnBasic(const Point& pos) {
   TransformComponent t;
-  t.position = pos;
   t.height = t.width = BASIC_ENEMY_SIZE;
+  t.position.x       = pos.x;
+  t.position.y       = pos.y - t.height / 2;
 
   SpeedComponent speed;
   speed.direction = { 0, 1 };
@@ -76,8 +83,9 @@ void EnemyManager::spawnBasic(const Point& pos) {
 
 void EnemyManager::spawnBoss(const Point& pos) {
   TransformComponent t;
-  t.position = pos;
   t.height = t.width = BOSS_SIZE;
+  t.position.x       = pos.x;
+  t.position.y       = pos.y - t.height / 2;
 
   PathComponent path;
   path.points.push_back({ 400, 100 });
@@ -95,7 +103,7 @@ void EnemyManager::spawnBoss(const Point& pos) {
 
   ColliderComponent collider;
   collider.health = collider.damage = BOSS_HP;
-  collider.deathAnim                = AnimationId::DEFAULT_EXPLOSION;
+  collider.deathAnim                = AnimationId::LOUD_EXPLOSION;
   collider.scorePoints              = BOSS_POINTS;
 
   GunComponent g;

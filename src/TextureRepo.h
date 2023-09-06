@@ -19,6 +19,7 @@ public:
   SDL2::Texture loadWithoutCache(unsigned int id) const;
 
   SDL2::TextureData loadText(const char* text, unsigned int id) const;
+  SDL2::TextureData loadTextWithBackground(const char* text, unsigned int id, SDL2::Color bgColor) const;
 
   void clear();
 };

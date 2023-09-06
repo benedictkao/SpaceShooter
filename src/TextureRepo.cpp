@@ -20,7 +20,7 @@ SDL2::Texture TextureRepo::loadWithoutCache(unsigned int id) const {
   return SDL2::loadTexture(TextureId::getPath(id), _renderer);
 }
 
-SDL2::TextureData TextureRepo::loadText(const char*       text,
+SDL2::TextureData TextureRepo::loadText(const char*  text,
                                         unsigned int id) const {
   const TextParams& params = FontId::getParams(id);
   return SDL2::loadText(text,
@@ -28,6 +28,19 @@ SDL2::TextureData TextureRepo::loadText(const char*       text,
                         params.size,
                         { params.r, params.g, params.b },
                         _renderer);
+}
+
+SDL2::TextureData
+TextureRepo::loadTextWithBackground(const char*  text,
+                                    unsigned int id,
+                                    SDL2::Color  bgColor) const {
+  const TextParams& params = FontId::getParams(id);
+  return SDL2::loadTextWithBackground(text,
+                                      params.fontPath,
+                                      params.size,
+                                      { params.r, params.g, params.b },
+                                      bgColor,
+                                      _renderer);
 }
 
 void TextureRepo::clear() {

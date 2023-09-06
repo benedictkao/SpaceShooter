@@ -12,11 +12,14 @@ void KeyboardManager::handleKeydownEvent(const SDL2::Event& event) {
   switch (status) {
     case GameStatus::WIN:
     case GameStatus::LOSE:
-    case GameStatus::NONE:
+    case GameStatus::LOAD:
       handleLoadScreenKeydownEvent(event);
       break;
     case GameStatus::ONGOING:
       handleInGameKeydownEvent(event);
+      break;
+    case GameStatus::PAUSE:
+      handlePauseKeydownEvent(event);
       break;
   }
 }
@@ -72,7 +75,25 @@ void KeyboardManager::handleInGameKeydownEvent(const SDL2::Event& event) {
     case SDLK_SPACE:
       _controller.shootGun();
       break;
+    case SDLK_ESCAPE:
+      _controller.stopMovingPlayer();
+      _lvlManager.pause();
+      break;
     default:
+      break;
+  }
+}
+
+void KeyboardManager::handlePauseKeydownEvent(const SDL2::Event& event) {
+  switch (event.key.keysym.sym) {
+    case SDLK_UP:
+      _lvlManager.scrollOptionUp();
+      break;
+    case SDLK_DOWN:
+      _lvlManager.scrollOptionDown();
+      break;
+    case SDLK_RETURN:
+      _lvlManager.selectOption();
       break;
   }
 }

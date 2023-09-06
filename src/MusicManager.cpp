@@ -3,20 +3,23 @@
 
 static constexpr auto MUSIC_VOLUME{ 32 };
 static constexpr auto DEFAULT_SOUND_VOLUME{ 32 };
-static constexpr auto START_SOUND_VOLUME{ 128 };
+static constexpr auto BOSS_FIREBALL_VOLUME{ 64 };
+static constexpr auto MAX_VOLUME{ 128 };
 static constexpr auto BG_MUSIC_PATH{ "../../../res/audio/cruising.mp3" };
 
 void MusicManager::init() {
-  _musicMap[MusicId::LOAD] = SDL2::loadMusic(BG_MUSIC_PATH);
+  initMusic(MusicId::LOAD);
+  initMusic(MusicId::BOSS);
   SDL2::setMusicVolume(MUSIC_VOLUME);
 
-  initSound(SoundId::START, START_SOUND_VOLUME);
-  initSound(SoundId::VICTORY, START_SOUND_VOLUME);
-  initSound(SoundId::FAIL);
+  initSound(SoundId::START, MAX_VOLUME);
+  initSound(SoundId::VICTORY, MAX_VOLUME);
+  initSound(SoundId::FAIL, MAX_VOLUME);
   initSound(SoundId::EXPLODE);
   initSound(SoundId::PLAYER_DAMAGE);
   initSound(SoundId::SMALL_SHOT);
-  initSound(SoundId::FIREBALL);
+  initSound(SoundId::LOUD_EXPLODE, BOSS_FIREBALL_VOLUME);
+  initSound(SoundId::FIREBALL, BOSS_FIREBALL_VOLUME);
 }
 
 void MusicManager::playMusic(int id) const {
@@ -42,6 +45,11 @@ void MusicManager::close() {
     SDL2::freeMusic(it.second);
   for (auto& it : _soundMap)
     SDL2::freeSound(it.second);
+}
+
+void MusicManager::initMusic(unsigned int id) {
+  SDL2::Music music = SDL2::loadMusic(MusicId::getPath(id));
+  _musicMap[id]     = music;
 }
 
 void MusicManager::initSound(unsigned int id) {

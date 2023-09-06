@@ -47,11 +47,25 @@ SDL2::Texture SDL2::loadTexture(const char* path, Renderer renderer) {
 SDL2::TextureData SDL2::loadText(const char*  text,
                                  const char*  fontPath,
                                  unsigned int size,
-                                 const Color& color,
+                                 const Color& textColor,
                                  Renderer     renderer) {
-  // TODO: should this be taken as input?
   TTF_Font*    font        = TTF_OpenFont(fontPath, size);
-  SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, color);
+  SDL_Surface* textSurface = TTF_RenderText_Solid(font, text, textColor);
+
+  Texture     tex  = SDL_CreateTextureFromSurface(renderer, textSurface);
+  TextureData data = { tex, textSurface->w, textSurface->h };
+  SDL_FreeSurface(textSurface);
+  return data;
+}
+
+SDL2::TextureData SDL2::loadTextWithBackground(const char*  text,
+                                         const char*  fontPath,
+                                         unsigned int size,
+                                         const Color& textColor,
+                                         const Color& bgColor,
+                                         Renderer renderer) {
+  TTF_Font*    font        = TTF_OpenFont(fontPath, size);
+  SDL_Surface* textSurface = TTF_RenderText_Shaded(font, text, textColor, bgColor);
 
   Texture     tex  = SDL_CreateTextureFromSurface(renderer, textSurface);
   TextureData data = { tex, textSurface->w, textSurface->h };
@@ -167,11 +181,14 @@ void SDL2::delay(Uint32 timeInMillis) {
   SDL_Delay(timeInMillis);
 }
 
+void SDL2::quit() {
+  SDL_Quit();
+}
+
 void SDL2::close(SDL2::Window window, SDL2::Renderer renderer) {
   SDL_DestroyRenderer(renderer);
   SDL_DestroyWindow(window);
 
   Mix_Quit();
   IMG_Quit();
-  SDL_Quit();
 }

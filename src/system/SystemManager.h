@@ -32,4 +32,7 @@ public:
 
   void init(SDL2::Renderer);
   void update();
+
+private:
+  void addDummyPlayer() const;
 };

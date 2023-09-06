@@ -1,5 +1,7 @@
 #include "LevelManager.h"
 #include "Constants.h"
+#include "utils/Math.h"
+#include <iostream>
 
 static constexpr auto RESULT_DELAY_FRAMES{ 20 };
 
@@ -19,12 +21,15 @@ LevelManager::LevelManager(EntityManager&    em,
     , _textRenderer(textRenderer)
     , _musicManager(musicManager)
     , _enemyManager(em, texRepo)
-    , _currentStatus(GameStatus::NONE)
+    , _currentStatus(GameStatus::LOAD)
     , _countdown(0)
-    , _currentScore(0) {
+    , _currentScore(0)
+    , _newScore(0)
+    , _selectedOption(0) {
 
   // TODO: optimize this!
   Phase phase;
+  phase.musicId = MusicId::NONE;
 
   Spawner spawner;
   spawner.settings.push_back({ 80, 60, 3, 100 });
@@ -41,11 +46,11 @@ LevelManager::LevelManager(EntityManager&    em,
   auto it  = phase.spawners[0].settings.begin();
   auto end = phase.spawners[0].settings.end();
   while (it != end) {
-    it->startingCooldown += 160;
+    // it->startingCooldown += 60;
     it->coolDown = 80;
     ++it;
     if (it != end) {
-      it->startingCooldown += 200;
+      it->startingCooldown += 40;
       it->coolDown = 80;
       ++it;
     }
@@ -54,13 +59,15 @@ LevelManager::LevelManager(EntityManager&    em,
 
   phase.spawners.clear();
   spawner.settings.clear();
-  spawner.settings.push_back({ 300, 0, 1, 400 });
+  spawner.settings.push_back({ 200, 0, 1, 400 });
   spawner.type = EnemyType::BOSS;
   phase.spawners.push_back(spawner);
+  phase.musicId = MusicId::BOSS;
   _currentLevel.phases.push_back(phase);
 }
 
 void LevelManager::initLevel() {
+  std::cout << "+++++\nInit level!" << std::endl;
   reset();
 
   // pre-load common textures
@@ -72,30 +79,73 @@ void LevelManager::initLevel() {
   _texRepo.loadTexture(TextureId::BASIC_ENEMY);
   _texRepo.loadTexture(TextureId::EXPLOSION);
 
-  _pControl.addPlayer(400, 500);
+  _pControl.addPlayer(Constants::PLAYER_START_X, Constants::PLAYER_START_Y);
+  _textRenderer.showEmptyScore();
   _currentLevel.currentPhase = -1;
   initNextPhase();
   _currentStatus = GameStatus::ONGOING;
 }
 
+void LevelManager::pause() {
+  std::cout << "Game paused!" << std::endl;
+  _textRenderer.clearCenterText();
+  _selectedOption = 0;
+  _currentStatus  = GameStatus::PAUSE;
+}
+
+void LevelManager::resume() {
+  std::cout << "Game resumed!" << std::endl;
+  _textRenderer.clearCenterText();
+  _currentStatus = GameStatus::ONGOING;
+}
+
+void LevelManager::scrollOptionUp() {
+  coerceAtLeast(--_selectedOption, 0);
+}
+
+void LevelManager::scrollOptionDown() {
+  coerceAtMost(++_selectedOption, 2);
+}
+
+
+void LevelManager::selectOption() {
+  switch (_selectedOption) {
+    case 0:
+      resume();
+      break;
+    case 1:
+      initLevel();
+      break;
+    case 2:
+      SDL2::quit();
+      break;
+  }
+}
+
 void LevelManager::addScore(unsigned int score) {
-  _currentScore += score;
+  _newScore += score;
 }
 
 void LevelManager::reset() {
-  _textRenderer.clearCenterText();
-  _textRenderer.clearScore();
+  _textRenderer.clearAllTexts();
   _pControl.reset();
+  _enemyManager.reset();
   _em.reset();
   _texRepo.clear();
+  _newScore     = 0;
   _currentScore = 0;
   _countdown    = 0;
 }
 
 GameStatus LevelManager::updateStatus() {
   switch (_currentStatus) {
-    case GameStatus::NONE:
+    case GameStatus::LOAD:
       _textRenderer.showCenterText(Constants::GAME_NAME, START_SUBTITLE);
+      break;
+    case GameStatus::PAUSE:
+      _textRenderer.showOptionText("Paused",
+                                   { "Resume", "Restart", "Quit" },
+                                   _selectedOption);
       break;
     case GameStatus::ONGOING:
       _pControl.updateHpBar();
@@ -119,6 +169,8 @@ GameStatus LevelManager::getStatus() const {
 }
 
 void LevelManager::setResult(GameStatus status) {
+  std::cout << "Set result: " << status << std::endl;
+  _musicManager.stopPlayingMusic();
   _countdown     = RESULT_DELAY_FRAMES;
   _currentStatus = status;
 }
@@ -138,7 +190,10 @@ void LevelManager::displayResult(const char*  title,
 }
 
 void LevelManager::updateLevel() {
-  _textRenderer.showScore(_currentScore);
+  if (_currentScore != _newScore) {
+    _currentScore = _newScore;
+    _textRenderer.updateScore(_currentScore);
+  }
 
   bool phaseComplete = true;
 
@@ -146,15 +201,18 @@ void LevelManager::updateLevel() {
   for (int i : activeEntities) {
     if (_em.hasComponents(i, ComponentFlag::SPAWN)) {
       phaseComplete = false;
-      _enemyManager.spawnEnemy(i);
+      _enemyManager.updateSpawner(i);
     }
   }
   _enemyManager.updateActiveEnemies();
 
-  if (phaseComplete) {
+  bool enemiesDead = _enemyManager.allEnemiesDead();
+  // std::cout << "phaseComplete, enemiesDead: " << phaseComplete << enemiesDead
+  // << std::endl;
+  if (phaseComplete && enemiesDead) {
     if (_currentLevel.currentPhase < _currentLevel.phases.size() - 1) {
       initNextPhase();
-    } else if (_enemyManager.allEnemiesDead()) {
+    } else {
       setResult(GameStatus::WIN);
       _pControl.stopMovingPlayer();
       _pControl.stopShootingGun();
@@ -163,8 +221,16 @@ void LevelManager::updateLevel() {
 }
 
 void LevelManager::initNextPhase() {
-  const auto& spawners =
-    _currentLevel.phases[++_currentLevel.currentPhase].spawners;
+  const Phase& newPhase = _currentLevel.phases[++_currentLevel.currentPhase];
+  std::cout << "+++++\nInit phase " << _currentLevel.currentPhase << std::endl;
+
+  if (newPhase.musicId == MusicId::NONE) {
+    _musicManager.stopPlayingMusic();
+  } else {
+    _musicManager.playMusic(newPhase.musicId);
+  }
+
+  const auto& spawners = newPhase.spawners;
 
   for (const auto& spawner : spawners) {
     for (const auto& setting : spawner.settings) {

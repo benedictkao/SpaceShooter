@@ -9,7 +9,7 @@
 #include "level/Level.h"
 #include <vector>
 
-enum GameStatus { NONE, ONGOING, WIN, LOSE };
+enum GameStatus { LOAD, PAUSE, ONGOING, WIN, LOSE };
 
 class LevelManager {
 
@@ -23,7 +23,9 @@ private:
   GameStatus        _currentStatus;
   unsigned int      _countdown;
   unsigned int      _currentScore;
+  unsigned int      _newScore;
   Level             _currentLevel;
+  int               _selectedOption;
 
 public:
   LevelManager(EntityManager&,
@@ -33,12 +35,17 @@ public:
                MusicManager&);
 
   void       initLevel();
+  void       pause();
+  void       scrollOptionUp();
+  void       scrollOptionDown();
+  void       selectOption();
   void       addScore(unsigned int);
   void       reset();
   GameStatus updateStatus();
   GameStatus getStatus() const;
 
 private:
+  void resume();
   void setResult(GameStatus);
   void
   displayResult(const char* title, const char* subtitle, unsigned int soundId);

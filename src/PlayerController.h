@@ -36,9 +36,10 @@ public:
   void shootGun();
   void stopShootingGun();
 
+  SpriteComponent    createSprite() const;
+  TransformComponent createTransform(int x, int y);
+
 private:
-  SpriteComponent           createSprite() const;
-  static TransformComponent createTransform(int x, int y);
-  static GunComponent       createGun();
-  static ColliderComponent  createCollider();
+  GunComponent      createGun();
+  ColliderComponent createCollider();
 };
