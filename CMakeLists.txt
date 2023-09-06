@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project (TestGame LANGUAGES CXX)
+project (SpaceShooter LANGUAGES CXX)
 
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
@@ -54,4 +54,4 @@ target_link_libraries(SpaceShooter
     systems
 )
 ## Below line removals terminal window from executable
-target_link_options(SpaceShooter PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")
+#target_link_options(SpaceShooter PRIVATE "/SUBSYSTEM:WINDOWS" "/ENTRY:mainCRTStartup")

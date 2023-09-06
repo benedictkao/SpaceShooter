@@ -1,5 +1,7 @@
 #pragma once
 
+//#define RELEASE
+
 namespace TextureId {
   constexpr unsigned int GREEN_SHIP{ 0 };
   constexpr unsigned int FIREBALL{ 1 };
@@ -11,6 +13,17 @@ namespace TextureId {
   constexpr unsigned int BACKGROUND{ 7 };
   constexpr unsigned int HEART{ 8 };
 
+#ifdef RELEASE
+  constexpr const char* PATHS[] = { "res/texture/player.png",
+                                    "res/texture/red-fireball.png",
+                                    "res/texture/yellow-fireball.png",
+                                    "res/texture/blue-fireball.png",
+                                    "res/texture/enemy-ship.png",
+                                    "res/texture/explosion-pack.png",
+                                    "res/texture/basic-enemy.png",
+                                    "res/texture/scrolling-bg.png",
+                                    "res/texture/heart.png" };
+#else
   constexpr const char* PATHS[] = { "../../../res/texture/player.png",
                                     "../../../res/texture/red-fireball.png",
                                     "../../../res/texture/yellow-fireball.png",
@@ -20,6 +33,7 @@ namespace TextureId {
                                     "../../../res/texture/basic-enemy.png",
                                     "../../../res/texture/scrolling-bg.png",
                                     "../../../res/texture/heart.png" };
+#endif
 
   constexpr const char* getPath(unsigned int id) {
     return PATHS[id];
@@ -31,8 +45,13 @@ namespace MusicId {
   constexpr auto LOAD{ 0 };
   constexpr auto BOSS{ 1 };
 
+#ifdef RELEASE
+  constexpr const char* PATHS[] = { "res/audio/cruising.mp3",
+                                    "res/audio/boss.mp3" };
+#else
   constexpr const char* PATHS[] = { "../../../res/audio/cruising.mp3",
                                     "../../../res/audio/boss.mp3" };
+#endif
 
   constexpr const char* getPath(unsigned int id) {
     return PATHS[id];
@@ -50,12 +69,21 @@ namespace SoundId {
   constexpr auto FAIL{ 6 };
   constexpr auto LOUD_EXPLODE{ 7 };
 
+#ifdef RELEASE
+  constexpr const char* PATHS[] = {
+    "res/audio/game-start.mp3",    "res/audio/explode.wav",
+    "res/audio/pew.wav",           "res/audio/shoot-fire.mp3",
+    "res/audio/player-damage.mp3", "res/audio/victory.mp3",
+    "res/audio/fail.mp3",          "res/audio/explode.wav"
+  };
+#else
   constexpr const char* PATHS[] = {
     "../../../res/audio/game-start.mp3",    "../../../res/audio/explode.wav",
     "../../../res/audio/pew.wav",           "../../../res/audio/shoot-fire.mp3",
     "../../../res/audio/player-damage.mp3", "../../../res/audio/victory.mp3",
     "../../../res/audio/fail.mp3",          "../../../res/audio/explode.wav"
   };
+#endif
 
   constexpr const char* getPath(unsigned int id) {
     return PATHS[id];
@@ -92,7 +120,11 @@ const struct TextParams {
   unsigned char b;
 };
 
+#ifdef RELEASE
+constexpr auto RETRO_FONT_PATH{ "res/font/retro.ttf" };
+#else
 constexpr auto RETRO_FONT_PATH{ "../../../res/font/retro.ttf" };
+#endif
 
 namespace FontId {
   constexpr int TITLE{ 0 };
