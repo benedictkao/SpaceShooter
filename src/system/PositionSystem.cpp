@@ -36,7 +36,7 @@ void PositionSystem::updatePath(int                       entity,
   const Point&   target = path.points[path.current];
   if (transform.position == target) {
     if (++path.current == path.points.size()) {
-      if (path.repeatFrom > 0) {
+      if (path.repeatFrom >= 0) {
         path.current = path.repeatFrom;
         speed.direction =
           calculateDirection(transform.position, path.points[path.current]);
@@ -45,6 +45,9 @@ void PositionSystem::updatePath(int                       entity,
         path.points.clear();
         _em.removeComponents(entity, ComponentFlag::PATH);
       }
+    } else {
+      speed.direction =
+        calculateDirection(transform.position, path.points[path.current]);
     }
   } else {
     speed.direction = calculateDirection(transform.position, target);

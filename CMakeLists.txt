@@ -47,6 +47,7 @@ add_executable(SpaceShooter
     "src/TextRenderer.cpp"
     "src/BackgroundManager.cpp"
     "src/MusicManager.cpp"
+    space-shooter.o
 )
 target_link_libraries(SpaceShooter
     sdl

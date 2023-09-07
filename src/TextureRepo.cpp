@@ -1,7 +1,18 @@
 #include "TextureRepo.h"
 
-void TextureRepo::setRenderer(SDL2::Renderer renderer) {
+void TextureRepo::init(SDL2::Renderer renderer) {
   _renderer = renderer;
+
+  // add this here for now - remove in future if adding multiple levels
+  // pre-load common textures
+  loadTexture(TextureId::FIREBALL);
+  loadTexture(TextureId::BOSS_ENEMY);
+  loadTexture(TextureId::EXPLOSION);
+  loadTexture(TextureId::BASIC_ENEMY);
+  loadTexture(TextureId::BLUE_BULLET);
+  loadTexture(TextureId::HEART);
+  loadTexture(TextureId::GREEN_SHIP);
+  loadTexture(TextureId::BACKGROUND);
 }
 
 SDL2::Texture TextureRepo::loadTexture(unsigned int id) {

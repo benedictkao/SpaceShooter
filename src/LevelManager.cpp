@@ -4,6 +4,7 @@
 #include <iostream>
 
 static constexpr auto RESULT_DELAY_FRAMES{ 20 };
+static constexpr auto POINTS_PER_HP{ 60 };
 
 static constexpr auto WIN_TITLE{ "You Win!" };
 static constexpr auto GAME_OVER{ "Game Over" };
@@ -32,13 +33,13 @@ LevelManager::LevelManager(EntityManager&    em,
   phase.musicId = MusicId::NONE;
 
   Spawner spawner;
-  spawner.settings.push_back({ 80, 60, 3, 100 });
-  spawner.settings.push_back({ 80, 60, 3, 200 });
-  spawner.settings.push_back({ 80, 60, 3, 300 });
-  spawner.settings.push_back({ 80, 60, 3, 400 });
-  spawner.settings.push_back({ 80, 60, 3, 500 });
-  spawner.settings.push_back({ 80, 60, 3, 600 });
-  spawner.settings.push_back({ 80, 60, 3, 700 });
+  spawner.settings.push_back({ 80, 70, 4, 100 });
+  spawner.settings.push_back({ 80, 70, 4, 200 });
+  spawner.settings.push_back({ 80, 70, 4, 300 });
+  spawner.settings.push_back({ 80, 70, 4, 400 });
+  spawner.settings.push_back({ 80, 70, 4, 500 });
+  spawner.settings.push_back({ 80, 70, 4, 600 });
+  spawner.settings.push_back({ 80, 70, 4, 700 });
   spawner.type = EnemyType::BASIC;
   phase.spawners.push_back(spawner);
   _currentLevel.phases.push_back(phase);
@@ -46,7 +47,6 @@ LevelManager::LevelManager(EntityManager&    em,
   auto it  = phase.spawners[0].settings.begin();
   auto end = phase.spawners[0].settings.end();
   while (it != end) {
-    // it->startingCooldown += 60;
     it->coolDown = 80;
     ++it;
     if (it != end) {
@@ -68,16 +68,20 @@ LevelManager::LevelManager(EntityManager&    em,
 
 void LevelManager::initLevel() {
   std::cout << "+++++\nInit level!" << std::endl;
+  _musicManager.stopPlayingMusic();
+  _musicManager.stopSounds();
+  _musicManager.playSound(SoundId::START);
   reset();
 
+  // Note: disable this for now since only single level
   // pre-load common textures
-  _texRepo.loadTexture(TextureId::BOSS_ENEMY);
-  _texRepo.loadTexture(TextureId::FIREBALL);
-  _texRepo.loadTexture(TextureId::HEART);
-  _texRepo.loadTexture(TextureId::GREEN_SHIP);
-  _texRepo.loadTexture(TextureId::BLUE_BULLET);
-  _texRepo.loadTexture(TextureId::BASIC_ENEMY);
-  _texRepo.loadTexture(TextureId::EXPLOSION);
+  //_texRepo.loadTexture(TextureId::BOSS_ENEMY);
+  //_texRepo.loadTexture(TextureId::FIREBALL);
+  //_texRepo.loadTexture(TextureId::HEART);
+  //_texRepo.loadTexture(TextureId::GREEN_SHIP);
+  //_texRepo.loadTexture(TextureId::BLUE_BULLET);
+  //_texRepo.loadTexture(TextureId::BASIC_ENEMY);
+  //_texRepo.loadTexture(TextureId::EXPLOSION);
 
   _pControl.addPlayer(Constants::PLAYER_START_X, Constants::PLAYER_START_Y);
   _textRenderer.showEmptyScore();
@@ -131,7 +135,8 @@ void LevelManager::reset() {
   _pControl.reset();
   _enemyManager.reset();
   _em.reset();
-  _texRepo.clear();
+  // Note: disable this for now since only single level
+  //_texRepo.clear();
   _newScore     = 0;
   _currentScore = 0;
   _countdown    = 0;
@@ -148,8 +153,7 @@ GameStatus LevelManager::updateStatus() {
                                    _selectedOption);
       break;
     case GameStatus::ONGOING:
-      _pControl.updateHpBar();
-      if (_pControl.checkPlayerDead())
+      if (!_pControl.updateHp())
         setResult(GameStatus::LOSE);
       else
         updateLevel();
@@ -213,6 +217,9 @@ void LevelManager::updateLevel() {
     if (_currentLevel.currentPhase < _currentLevel.phases.size() - 1) {
       initNextPhase();
     } else {
+      int hpLeft = _pControl.getHp();
+      _currentScore += hpLeft * POINTS_PER_HP;
+      _textRenderer.updateScore(_currentScore);
       setResult(GameStatus::WIN);
       _pControl.stopMovingPlayer();
       _pControl.stopShootingGun();

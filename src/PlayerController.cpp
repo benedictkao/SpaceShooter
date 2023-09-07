@@ -48,7 +48,11 @@ int PlayerController::getPlayerId() const {
   return _playerId;
 }
 
-void PlayerController::updateHpBar() {
+int PlayerController::getHp() const {
+  return _hpIds.size();
+}
+
+bool PlayerController::updateHp() {
   int currentHp = _em.getComponent<ColliderComponent>(_playerId).health;
   coercePositive(currentHp);
   int displayHp = _hpIds.size();
@@ -57,6 +61,7 @@ void PlayerController::updateHpBar() {
     _hpIds.pop();
     --displayHp;
   }
+  return currentHp > 0;
 }
 
 void PlayerController::keepWithinWindow() {
@@ -72,10 +77,6 @@ void PlayerController::keepWithinWindow() {
                 Constants::WINDOW_HEIGHT - halfHeight);
 }
 
-bool PlayerController::checkPlayerDead() {
-  return _em.isScheduledForRemoval(_playerId);
-}
-
 void PlayerController::reset() {
   _playerId = -1;
   while (!_hpIds.empty())
@@ -84,7 +85,7 @@ void PlayerController::reset() {
 
 SpriteComponent PlayerController::createSprite() const {
   SpriteComponent sprite;
-  sprite.texture = _textureRepo.loadWithoutCache(TextureId::GREEN_SHIP);
+  sprite.texture = _textureRepo.loadTexture(TextureId::GREEN_SHIP);
   return sprite;
 }
 

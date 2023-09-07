@@ -7,10 +7,15 @@ static constexpr auto BASIC_ENEMY_SPEED{ 3 };
 static constexpr auto BASIC_ENEMY_HP{ 1 };
 static constexpr auto BASIC_ENEMY_POINTS{ 10 };
 
-static constexpr auto BOSS_SIZE{ 80 };
+static constexpr auto SHOOTER_SIZE{ 42 };
+static constexpr auto SHOOTER_SPEED{ 2 };
+static constexpr auto SHOOTER_HP{ 10 };
+static constexpr auto SHOOTER_POINTS{ 0 };
+
+static constexpr auto BOSS_SIZE{ 72 };
 static constexpr auto BOSS_SPEED{ 2 };
-static constexpr auto BOSS_HP{ 25 };
-static constexpr auto BOSS_POINTS{ 80 };
+static constexpr auto BOSS_HP{ 60 };
+static constexpr auto BOSS_POINTS{ 60 };
 
 EnemyManager::EnemyManager(EntityManager& em, TextureRepo& texRepo)
     : _em(em), _texRepo(texRepo) {}
@@ -81,6 +86,34 @@ void EnemyManager::spawnBasic(const Point& pos) {
   _activeEnemies.insert(enemyId);
 }
 
+void EnemyManager::spawnShooter(const Point& pos) {
+  TransformComponent t;
+  t.height = t.width = BASIC_ENEMY_SIZE;
+  t.position.x       = pos.x;
+  t.position.y       = pos.y - t.height / 2;
+
+  SpeedComponent speed;
+  speed.direction = { 0, 1 };
+  speed.speed     = BASIC_ENEMY_SPEED;
+
+  SpriteComponent sprite;
+  sprite.texture = _texRepo.loadTexture(TextureId::BASIC_ENEMY);
+
+  ColliderComponent collider;
+  collider.health = collider.damage = BASIC_ENEMY_HP;
+  collider.deathAnim                = AnimationId::DEFAULT_EXPLOSION;
+  collider.scorePoints              = BASIC_ENEMY_POINTS;
+
+  int enemyId = _em.addEntity()
+                  .add<TransformComponent>(t)
+                  .add<SpeedComponent>(speed)
+                  .add<SpriteComponent>(sprite)
+                  .add<ColliderComponent>(collider)
+                  .addFlags(ComponentFlag::ENEMY)
+                  .id();
+  _activeEnemies.insert(enemyId);
+}
+
 void EnemyManager::spawnBoss(const Point& pos) {
   TransformComponent t;
   t.height = t.width = BOSS_SIZE;
@@ -88,11 +121,16 @@ void EnemyManager::spawnBoss(const Point& pos) {
   t.position.y       = pos.y - t.height / 2;
 
   PathComponent path;
-  path.points.push_back({ 400, 100 });
+  path.points.push_back({ 400, 200 });
+  path.points.push_back({ 100, 200 });
   path.points.push_back({ 100, 100 });
+  path.points.push_back({ 400, 100 });
+  path.points.push_back({ 400, 200 });
+  path.points.push_back({ 700, 200 });
   path.points.push_back({ 700, 100 });
+  path.points.push_back({ 400, 100 });
   path.current    = 0;
-  path.repeatFrom = 1;
+  path.repeatFrom = 0;
 
   SpeedComponent speed;
   speed.direction = { 0, 0 };

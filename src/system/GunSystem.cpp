@@ -36,7 +36,7 @@ void GunSystem::createProjectile(const GunComponent&       gun,
   transform.width      = gun.ammo.width;
   transform.position.x = parent.position.x;
   int sign             = gun.direction == Direction::DOWN ? 1 : -1;
-  transform.position.y = parent.position.y + sign * parent.height / 2;
+  transform.position.y = parent.position.y + sign * (gun.ammo.height + parent.height) / 2;
 
   SpeedComponent speed;
   speed.direction = gun.direction;

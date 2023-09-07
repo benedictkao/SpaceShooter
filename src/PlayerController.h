@@ -17,9 +17,9 @@ public:
   void addPlayer(int x, int y);
   bool isPlayer(int) const;
   int  getPlayerId() const;
-  void updateHpBar();
+  int  getHp() const;
+  bool updateHp();
   void keepWithinWindow();
-  bool checkPlayerDead();
   void reset();
 
   void movePlayerUp();

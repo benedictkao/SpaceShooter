@@ -131,11 +131,13 @@ namespace FontId {
   constexpr int SUBTITLE{ 1 };
   constexpr int SUBTITLE_INVERSE{ 2 };
   constexpr int SCORE{ 3 };
+  constexpr int SCORE_MAX{ 4 };
 
   constexpr TextParams PARAMS[] = { { 48, RETRO_FONT_PATH, 204, 204, 0 },
                                     { 24, RETRO_FONT_PATH, 204, 204, 0 },
                                     { 24, RETRO_FONT_PATH, 6, 18, 33 },
-                                    { 18, RETRO_FONT_PATH, 220, 220, 220 } };
+                                    { 18, RETRO_FONT_PATH, 220, 220, 220 },
+                                    { 18, RETRO_FONT_PATH, 255, 0, 255 } };
 
   constexpr TextParams getParams(unsigned int id) {
     return PARAMS[id];

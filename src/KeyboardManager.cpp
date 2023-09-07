@@ -50,12 +50,8 @@ void KeyboardManager::handleKeyupEvent(const SDL2::Event& event) {
 }
 
 void KeyboardManager::handleLoadScreenKeydownEvent(const SDL2::Event& event) {
-  if (event.key.keysym.sym == SDLK_RETURN) {
-    _musicManager.stopPlayingMusic();
-    _musicManager.stopSounds();
-    _musicManager.playSound(SoundId::START);
+  if (event.key.keysym.sym == SDLK_RETURN)
     _lvlManager.initLevel();
-  }
 }
 
 void KeyboardManager::handleInGameKeydownEvent(const SDL2::Event& event) {

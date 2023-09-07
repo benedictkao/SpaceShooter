@@ -2,6 +2,8 @@
 #include "Constants.h"
 #include <string>
 
+static constexpr auto SCORE_MAX{ 800 };
+
 TextRenderer::TextRenderer(EntityManager& em, TextureRepo& texRepo)
     : _em(em)
     , _texRepo(texRepo)
@@ -100,8 +102,9 @@ void TextRenderer::showEmptyScore() {
 // This is expensive!! Should create a texture sheet and cache it for long
 // term solution
 void TextRenderer::updateScore(unsigned int score) const {
-  std::string       str   = std::to_string(score);
-  SDL2::TextureData tData = _texRepo.loadText(str.c_str(), FontId::SCORE);
+  std::string  str    = std::to_string(score);
+  unsigned int fontId = score == SCORE_MAX ? FontId::SCORE_MAX : FontId::SCORE;
+  SDL2::TextureData tData = _texRepo.loadText(str.c_str(), fontId);
   int               x     = 20 + tData.width / 2;
   int               y     = 600;
 

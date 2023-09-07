@@ -44,7 +44,7 @@ int Game::run() {
   if (!renderer)
     return GAME_INIT_ERROR::RENDERER;
 
-  _texRepo.setRenderer(renderer);
+  _texRepo.init(renderer);
   _systemManager.init(renderer);
 
   bool running = true;

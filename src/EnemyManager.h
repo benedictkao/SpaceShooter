@@ -22,5 +22,6 @@ public:
 
 private:
   void spawnBasic(const Point&);
+  void spawnShooter(const Point&);
   void spawnBoss(const Point&);
 };
