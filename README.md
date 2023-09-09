@@ -2,7 +2,7 @@
 
 ## Summary
 
-Simple space-themed shoot-em-up game written in C++ to practice data-driven ECS architecture and low-level graphics and music libraries.
+Simple space-themed shoot-em-up game written in C++ to practice data-driven ECS architecture and low-level SDL graphics and music libraries.
 
 ## Demo
 
@@ -27,11 +27,11 @@ https://github.com/benedictkao/SpaceShooter/assets/87962221/efe32282-7157-4de8-b
 ### Mac/Linux
 
 1. Clone this repo
-2. Install the required libraries with the below command:
+2. Install the required libraries with the below commands:
 ```
 brew install SDL2
 brew install SDL2_image
 brew install SDL2_ttf
 brew install SDL2_mixer
 ```
-2. Build and run either through IDE or command line
+3. Build and run either through IDE or command line
