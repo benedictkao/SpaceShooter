@@ -191,4 +191,5 @@ void SDL2::close(SDL2::Window window, SDL2::Renderer renderer) {
 
   Mix_Quit();
   IMG_Quit();
+  TTF_Quit();
 }
