@@ -6,7 +6,7 @@ Simple space-themed shoot-em-up game written in C++ to practice data-driven ECS 
 
 ## Demo
 
-https://github.com/benedictkao/SpaceShooter/assets/87962221/efe32282-7157-4de8-b7b8-e75d9c6c2318
+https://github.com/benedictkao/SpaceShooter/tree/master/demo/space-shooter-demo.mp4
 
 ## External Libraries
 * [SDL2](https://github.com/libsdl-org/SDL) to create window and renderer
@@ -24,7 +24,7 @@ https://github.com/benedictkao/SpaceShooter/assets/87962221/efe32282-7157-4de8-b
 4. Put all the `.dll` files from all of the downloaded libraries into the output directories of the build target (this is defined as `"{PROJECT_SOURCE_DIR}/out/build/{BUILD_TARGET}"` in the `CMakePresets.json` file included in this project
 5. Build and run either through Visual Studio Code or command line
 
-### Mac/Linux
+### Mac
 
 1. Clone this repo
 2. Install the required libraries with the below commands:
