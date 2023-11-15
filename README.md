@@ -6,7 +6,9 @@ Simple space-themed shoot-em-up game written in C++ to practice data-driven ECS 
 
 ## Demo
 
-https://github.com/benedictkao/SpaceShooter/tree/master/demo/space-shooter-demo.mp4
+<video controls="" width="800" height="500" muted="" loop="" autoplay="">
+<source src="https://github.com/benedictkao/SpaceShooter/tree/master/demo/space-shooter-demo.mp4" type="video/mp4">
+</video>
 
 ## External Libraries
 * [SDL2](https://github.com/libsdl-org/SDL) to create window and renderer
